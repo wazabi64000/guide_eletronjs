@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="00-introduction">
+
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 0 — Applications Web, Desktop & Electron</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Tous niveaux</span>
+      <span class="course-meta__badge">⏱ 8 heures</span>
+      <span class="course-meta__badge">Prérequis : Aucun</span>
+    </div>
+
+    <h2>1. Objectifs pédagogiques</h2>
+    <p>À l'issue de ce chapitre, vous serez capable de :</p>
+    <ul>
+      <li>Définir une application Web et une application Desktop</li>
+      <li>Expliquer le rôle d'Electron dans l'écosystème cross-platform</li>
+      <li>Décrire l'architecture Main / Renderer / Preload</li>
+      <li>Comparer Electron avec Tauri, Flutter et Neutralino</li>
+      <li>Choisir la technologie adaptée à un besoin métier</li>
+    </ul>
+
+    <h2>2. Qu'est-ce qu'une application Web ?</h2>
+    <p>
+      Une <strong>application Web</strong> est un logiciel accessible via un <strong>navigateur</strong>
+      (Chrome, Firefox, Safari, Edge). Le navigateur télécharge des fichiers HTML, CSS et JavaScript
+      et les exécute pour afficher une interface interactive.
+    </p>
+
+    <table>
+      <thead>
+        <tr><th>Aspect</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Distribution</td><td>Aucune installation requise (sauf PWA)</td></tr>
+        <tr><td>Mise à jour</td><td>Instantanée côté serveur</td></tr>
+        <tr><td>Accès</td><td>Multi-plateforme via navigateur</td></tr>
+        <tr><td>Sécurité</td><td>Sandbox du navigateur (same-origin policy)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="ascii-diagram">┌─────────────────────────────────────────────────────────────┐
+│                      NAVIGATEUR WEB                          │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │    HTML     │  │     CSS     │  │    JavaScript       │  │
+│  │  Structure  │  │   Style     │  │   Interactivité     │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+│                          ▼                                   │
+│              ┌───────────────────────┐                       │
+│              │   Moteur de rendu     │                       │
+│              └───────────────────────┘                       │
+└─────────────────────────────────────────────────────────────┘
+                          │ HTTP/HTTPS
+                          ▼
+              ┌───────────────────────┐
+              │   Serveur Web + API   │
+              └───────────────────────┘</div>
+
+    <h2>3. Qu'est-ce qu'une application Desktop ?</h2>
+    <p>
+      Une <strong>application Desktop</strong> s'installe sur le système d'exploitation.
+      Elle accède aux fichiers locaux, imprimantes, notifications système et bases de données locales.
+    </p>
+    <p><strong>Exemples Electron :</strong> VS Code, Slack, Discord, Notion Desktop, Obsidian.</p>
+
+    <h2>4. Qu'est-ce qu'Electron ?</h2>
+    <p>
+      <strong>Electron</strong> est un framework open source (GitHub, 2013) qui combine
+      <strong>Chromium</strong> (rendu UI) et <strong>Node.js</strong> (accès système)
+      pour créer des applications Desktop en HTML, CSS et JavaScript.
+    </p>
+
+    <div class="ascii-diagram">┌─────────────────────────────────────────────────────────────────┐
+│                    APPLICATION ELECTRON                          │
+│  ┌──────────────────────┐    ┌──────────────────────────────┐   │
+│  │    MAIN PROCESS      │    │     RENDERER PROCESS(ES)     │   │
+│  │    (Node.js)         │◀──▶│     (Chromium)               │   │
+│  │  • Fenêtres          │IPC │  • HTML / CSS / JS           │   │
+│  │  • Menus             │    │  • Interface utilisateur     │   │
+│  │  • SQLite / fichiers │    │                              │   │
+│  └──────────────────────┘    └──────────────────────────────┘   │
+│              └────────── PRELOAD (pont sécurisé) ──────────┘   │
+└─────────────────────────────────────────────────────────────────┘</div>
+
+    <h3>Main Process</h3>
+    <ul>
+      <li>Point d'entrée : <code>main.js</code></li>
+      <li>Un seul par application — gère fenêtres, menus, cycle de vie</li>
+      <li>Accès complet Node.js et APIs Electron</li>
+    </ul>
+
+    <h3>Renderer Process</h3>
+    <ul>
+      <li>Un par fenêtre — affiche HTML/CSS/JS</li>
+      <li>Pas d'accès Node.js direct (sécurité)</li>
+      <li>Communique via IPC</li>
+    </ul>
+
+    <h3>Preload Script</h3>
+    <ul>
+      <li>Pont sécurisé via <code>contextBridge.exposeInMainWorld()</code></li>
+      <li>Exécute avant le chargement de la page</li>
+    </ul>
+
+    <h2>5. Avantages & inconvénients</h2>
+    <table>
+      <thead>
+        <tr><th>✅ Avantages</th><th>❌ Inconvénients</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Stack Web réutilisable</td><td>Taille ~150 Mo+</td></tr>
+        <tr><td>Cross-platform (Win/Mac/Linux)</td><td>Consommation RAM élevée</td></tr>
+        <tr><td>Écosystème npm riche</td><td>Performance &lt; natif</td></tr>
+        <tr><td>Chrome DevTools intégrés</td><td>Risques sécurité si mal configuré</td></tr>
+      </tbody>
+    </table>
+
+    <h2>6. Comparaisons</h2>
+    <h3>Electron vs Tauri</h3>
+    <table>
+      <thead>
+        <tr><th>Critère</th><th>Electron</th><th>Tauri</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Moteur UI</td><td>Chromium embarqué</td><td>WebView OS native</td></tr>
+        <tr><td>Backend</td><td>Node.js</td><td>Rust</td></tr>
+        <tr><td>Taille binaire</td><td>~150 Mo+</td><td>~5–15 Mo</td></tr>
+        <tr><td>Écosystème npm</td><td>Complet</td><td>Partiel</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Electron vs Flutter</h3>
+    <table>
+      <thead>
+        <tr><th>Critère</th><th>Electron</th><th>Flutter</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Langage UI</td><td>HTML/CSS/JS</td><td>Dart + widgets</td></tr>
+        <tr><td>Desktop</td><td>Mature</td><td>Récent</td></tr>
+        <tr><td>Mobile</td><td>Non recommandé</td><td>Excellent</td></tr>
+      </tbody>
+    </table>
+
+    <h2>7. Exemple simple — Hello Electron</h2>
+    <pre><code>// main.js — Main Process
+import { app, BrowserWindow } from 'electron';
+import path from 'node:path';
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,   // Sécurité
+      nodeIntegration: false, // Sécurité
+    },
+  });
+  win.loadFile('index.html');
+}
+
+app.whenReady().then(createWindow);</code></pre>
+
+    <h2>8. Exercices</h2>
+    <div class="quiz-block">
+      <h4>Exercice 1 — Classification</h4>
+      <p>Classez : Spotify (navigateur), VS Code, Calculatrice Windows, Notion Desktop.</p>
+      <button type="button" data-quiz-answer="Spotify=Web, VS Code=Electron, Calculatrice=native, Notion=Electron">Voir la correction</button>
+      <p class="quiz-feedback" hidden></p>
+    </div>
+
+    <h2>9. Quiz</h2>
+    <div class="quiz-block">
+      <h4>Q1. Electron combine quels projets ?</h4>
+      <label class="quiz-option"><input type="radio" name="q1"> Firefox et Python</label>
+      <label class="quiz-option"><input type="radio" name="q1" checked> Chromium et Node.js ✓</label>
+      <label class="quiz-option"><input type="radio" name="q1"> WebKit et Deno</label>
+    </div>
+    <div class="quiz-block">
+      <h4>Q2. Où s'exécute main.js ?</h4>
+      <label class="quiz-option"><input type="radio" name="q2"> Renderer Process</label>
+      <label class="quiz-option"><input type="radio" name="q2" checked> Main Process ✓</label>
+      <label class="quiz-option"><input type="radio" name="q2"> Preload Script</label>
+    </div>
+
+    <h2>10. Bonnes pratiques</h2>
+    <ul>
+      <li>Toujours <code>contextIsolation: true</code> et <code>nodeIntegration: false</code></li>
+      <li>Exposer le minimum d'API via <code>contextBridge</code></li>
+      <li>Séparer Main (système) et Renderer (UI)</li>
+    </ul>
+
+    <h2>11. Erreurs fréquentes</h2>
+    <div class="alert alert--warning">
+      <strong>nodeIntegration: true</strong> partout → failles XSS critiques. Utilisez Preload + contextBridge.
+    </div>
+
+    <h2>12. Challenge de fin de chapitre</h2>
+    <p>
+      Rédigez un cahier des charges technique (5 pages max) pour une app de votre choix :
+      contexte métier, Web vs Desktop, comparaison des frameworks, architecture ASCII, risques.
+    </p>
+  </div>
+
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>
