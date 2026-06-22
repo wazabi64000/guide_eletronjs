@@ -3,103 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Formation complète HTML, CSS, JavaScript et Electron.js — wazabiCode">
-  <title>Accueil — wazabiCode</title>
+  <meta name="description" content="Formation Electron.js — Débutant à Expert — wazabiCode">
+  <title>Accueil — wazabiCode Electron</title>
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body data-page="accueil">
 
   <div id="page-content" class="course-content">
     <section class="hero">
-      <h1>HTML, CSS, JavaScript & Electron.js</h1>
+      <h1>Electron.js — Débutant à Expert</h1>
       <p class="hero__subtitle">
-        Parcours professionnel <strong>Débutant → Expert</strong>.
-        De vos premières lignes de code à une application Desktop SaaS complète.
+        Formation professionnelle <strong>100 % Electron.js</strong> pour créer des applications Desktop
+        cross-platform (Windows, macOS, Linux).
       </p>
+      <div class="alert alert--info" style="text-align:left; max-width:640px; margin:1.5rem auto;">
+        <strong>Prérequis :</strong> Ce cours enseigne Electron.js uniquement. Vous devez déjà connaître
+        les bases de HTML, CSS et JavaScript. L'interface de cette plateforme e-learning est elle-même
+        développée en HTML, CSS et JavaScript.
+      </div>
       <div class="hero__stats">
         <div class="hero__stat">
-          <div class="hero__stat-value">320h</div>
+          <div class="hero__stat-value">~180h</div>
           <div class="hero__stat-label">de formation</div>
         </div>
         <div class="hero__stat">
-          <div class="hero__stat-value">15</div>
+          <div class="hero__stat-value">16</div>
           <div class="hero__stat-label">modules</div>
         </div>
         <div class="hero__stat">
           <div class="hero__stat-value">4</div>
-          <div class="hero__stat-label">projets majeurs</div>
+          <div class="hero__stat-label">projets Electron</div>
         </div>
         <div class="hero__stat">
-          <div class="hero__stat-value">4</div>
-          <div class="hero__stat-label">niveaux</div>
+          <div class="hero__stat-value">3</div>
+          <div class="hero__stat-label">OS cibles</div>
         </div>
       </div>
-      <a href="pages/00-introduction.html" class="card" style="display:inline-block; max-width:320px; margin-top:1rem;">
+      <a href="pages/00-introduction.html" class="card" style="display:inline-block; max-width:340px; margin-top:1rem;">
         <div class="card__title">Commencer le parcours →</div>
-        <div class="card__desc">Chapitre 0 — Applications Web, Desktop & Electron</div>
+        <div class="card__desc">Chapitre 0 — Qu'est-ce qu'Electron ?</div>
       </a>
     </section>
 
-    <h2>Carte des niveaux</h2>
+    <h2>Parcours Electron.js</h2>
     <div class="level-pills">
-      <span class="level-pill level-pill--debutant">Débutant · ~100h</span>
-      <span class="level-pill level-pill--intermediaire">Intermédiaire · ~110h</span>
-      <span class="level-pill level-pill--avance">Avancé · ~100h</span>
-      <span class="level-pill level-pill--expert">Expert · ~110h</span>
+      <span class="level-pill level-pill--debutant">Débutant · ~28h</span>
+      <span class="level-pill level-pill--intermediaire">Intermédiaire · ~38h</span>
+      <span class="level-pill level-pill--avance">Avancé · ~46h</span>
+      <span class="level-pill level-pill--expert">Expert · ~34h + projets</span>
     </div>
+
+    <div class="ascii-diagram">┌──────────────────────────────────────────────────────────────────────────┐
+│  INTRO → INSTALL → PREMIERS PAS → FENÊTRES → PRELOAD/IPC → SÉCURITÉ     │
+│       → UI NATIVE → FICHIERS → SQLITE → API REST → SYNC → ARCHITECTURE  │
+│       → DEBUG → TESTS → PACKAGING → DÉPLOIEMENT → PROJET SAAS EXPERT    │
+└──────────────────────────────────────────────────────────────────────────┘</div>
 
     <div class="card-grid">
       <a href="pages/00-introduction.html" class="card">
         <div class="card__icon">📖</div>
-        <div class="card__title">Introduction</div>
-        <div class="card__desc">Web, Desktop, Electron, comparaisons Tauri/Flutter</div>
-        <div class="card__meta">8 heures · Tous niveaux</div>
+        <div class="card__title">Introduction Electron</div>
+        <div class="card__desc">Architecture, Main/Renderer, comparaisons Tauri/Flutter</div>
+        <div class="card__meta">4 heures</div>
       </a>
-      <a href="pages/01-installation.html" class="card">
-        <div class="card__icon">⚙️</div>
-        <div class="card__title">Installation</div>
-        <div class="card__desc">VS Code, Node.js, Git, SQLite, premier script JS</div>
-        <div class="card__meta">12 heures · Débutant</div>
+      <a href="pages/02-premiers-pas.html" class="card">
+        <div class="card__icon">🚀</div>
+        <div class="card__title">Premiers pas</div>
+        <div class="card__desc">electron-quick-start, structure projet, Hello World</div>
+        <div class="card__meta">10 heures</div>
       </a>
-      <a href="pages/02-html5.html" class="card">
-        <div class="card__icon">🏷️</div>
-        <div class="card__title">HTML5</div>
-        <div class="card__desc">Balises, formulaires, accessibilité, SEO, projets CV & Blog</div>
-        <div class="card__meta">25 heures · Débutant</div>
+      <a href="pages/04-preload-ipc.html" class="card">
+        <div class="card__icon">🔗</div>
+        <div class="card__title">Preload & IPC</div>
+        <div class="card__desc">contextBridge, ipcMain, ipcRenderer, communication sécurisée</div>
+        <div class="card__meta">12 heures</div>
       </a>
-      <a href="pages/03-css3.html" class="card">
-        <div class="card__icon">🎨</div>
-        <div class="card__title">CSS3</div>
-        <div class="card__desc">Flexbox, Grid, responsive, animations, variables CSS</div>
-        <div class="card__meta">30 heures · Débutant</div>
+      <a href="pages/08-sqlite.html" class="card">
+        <div class="card__icon">🗄️</div>
+        <div class="card__title">SQLite</div>
+        <div class="card__desc">better-sqlite3 dans le Main Process, CRUD, persistance</div>
+        <div class="card__meta">12 heures</div>
       </a>
-      <a href="pages/09-electron.html" class="card">
-        <div class="card__icon">💻</div>
-        <div class="card__title">Electron.js</div>
-        <div class="card__desc">Main, Renderer, Preload, IPC, sécurité, bloc-notes</div>
-        <div class="card__meta">30 heures · Avancé</div>
+      <a href="pages/14-packaging.html" class="card">
+        <div class="card__icon">📀</div>
+        <div class="card__title">Packaging</div>
+        <div class="card__desc">EXE, AppImage, DMG avec electron-builder</div>
+        <div class="card__meta">8 heures</div>
       </a>
       <a href="pages/projet-saas.html" class="card">
         <div class="card__icon">🏆</div>
         <div class="card__title">Projet Expert SaaS</div>
-        <div class="card__desc">Auth, SQLite, API REST, sync offline, PDF, dashboard</div>
-        <div class="card__meta">60 heures · Expert</div>
+        <div class="card__desc">Auth JWT, SQLite, API REST, sync offline, PDF, dashboard</div>
+        <div class="card__meta">40 heures</div>
       </a>
     </div>
 
     <h2>Compétences visées</h2>
     <ul>
-      <li>Développer des applications Web modernes (HTML5, CSS3, JavaScript ES2025+)</li>
-      <li>Créer des applications Desktop cross-platform avec Electron.js</li>
-      <li>Persister des données localement avec SQLite</li>
-      <li>Connecter une app Electron à une API REST (JWT, mode offline)</li>
-      <li>Tester, déboguer, packager et déployer une application professionnelle</li>
+      <li>Créer une application Electron from scratch (Main, Renderer, Preload)</li>
+      <li>Maîtriser IPC et les bonnes pratiques de sécurité Electron</li>
+      <li>Intégrer SQLite pour la persistance locale</li>
+      <li>Connecter une app Electron à une API REST (JWT, synchronisation offline)</li>
+      <li>Déboguer, tester, packager et déployer une application Desktop professionnelle</li>
     </ul>
-
-    <div class="ascii-diagram">┌─────────────────────────────────────────────────────────────────────────┐
-│  INTRODUCTION → INSTALLATION → HTML → CSS → JS → SQLite → Node.js      │
-│       → ELECTRON → ELECTRON+SQL → ELECTRON+API → TESTS → DEPLOY       │
-└─────────────────────────────────────────────────────────────────────────┘</div>
   </div>
 
   <script src="assets/js/navigation.js"></script>

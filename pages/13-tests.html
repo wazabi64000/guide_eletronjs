@@ -3,50 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tests (Jest, Playwright) — wazabiCode</title>
+  <title>Module 13 — Tests Jest & Playwright — wazabiCode Electron</title>
   <link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body data-page="13-tests">
-
   <div id="page-content" class="course-content">
-    <h1>Tests (Jest, Playwright)</h1>
+    <h1>Module 13 — Tests Jest & Playwright</h1>
     <div class="course-meta">
       <span class="course-meta__badge course-meta__badge--level">Expert</span>
-      <span class="course-meta__badge">⏱ 20h</span>
+      <span class="course-meta__badge">⏱ 10h</span>
+      <span class="course-meta__badge">Prérequis : Module 12</span>
     </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Tests unitaires des services (Jest)</li>
+      <li>Tests E2E Electron (Playwright)</li>
+      <li>Mock IPC pour tests isolés</li>
+    </ul>
 
-    <div class="alert alert--info">
-      <strong>Module en cours de rédaction.</strong> Le contenu complet (théorie, exemples, exercices, corrections, quiz, challenge) sera ajouté progressivement. La structure pédagogique est en place.
-    </div>
+    <h2>2. Jest — service DB</h2>
+    <pre><code>import { describe, it, expect } from '@jest/globals';
+import { addTask, getTasks } from '../main/services/database.js';
 
-    <h2>1. Objectifs pédagogiques</h2>
-    <p>Tests unitaires, intégration, E2E avec Jest et Playwright.</p>
+describe('database', () => {
+  it('ajoute une tâche', () => {
+    addTask('Test');
+    expect(getTasks()).toHaveLength(1);
+  });
+});</code></pre>
 
-    <h2>2. Théorie détaillée</h2>
-    <p>Contenu à venir — section théorique complète avec schémas ASCII.</p>
+    <h2>3. Playwright Electron</h2>
+    <pre><code>import { _electron as electron } from 'playwright';
 
-    <h2>3. Exemples</h2>
-    <p>Exemples simples, intermédiaires et avancés à venir.</p>
+test('fenêtre principale', async () => {
+  const app = await electron.launch({ args: ['.'] });
+  const window = await app.firstWindow();
+  await expect(window).toHaveTitle('Mon App');
+  await app.close();
+});</code></pre>
 
-    <h2>4. Exercices & corrections</h2>
-    <p>Exercices pratiques avec corrections détaillées à venir.</p>
-
-    <h2>5. Quiz</h2>
-    <div class="quiz-block">
-      <h4>Quiz de validation — à compléter</h4>
-      <p>Questions à choix multiples pour valider vos acquis avant le module suivant.</p>
-    </div>
-
-    <h2>6. Bonnes pratiques</h2>
-    <p>Recommandations professionnelles spécifiques à ce module.</p>
-
-    <h2>7. Erreurs fréquentes</h2>
-    <p>Pièges courants et comment les éviter.</p>
-
-    <h2>8. Challenge de fin de chapitre</h2>
-    <p>Projet pratique pour consolider les acquis du module.</p>
+    <h2>4. Challenge</h2>
+    <p>5 tests unitaires + 2 tests E2E pour le gestionnaire de tâches.</p>
   </div>
-
   <script src="../assets/js/navigation.js"></script>
   <script src="../assets/js/layout.js"></script>
   <script src="../assets/js/app.js"></script>

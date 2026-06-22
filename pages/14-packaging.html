@@ -3,50 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Packaging — wazabiCode</title>
+  <title>Module 14 — Packaging multi-plateforme — wazabiCode Electron</title>
   <link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body data-page="14-packaging">
-
   <div id="page-content" class="course-content">
-    <h1>Packaging</h1>
+    <h1>Module 14 — Packaging multi-plateforme</h1>
     <div class="course-meta">
       <span class="course-meta__badge course-meta__badge--level">Expert</span>
-      <span class="course-meta__badge">⏱ 15h</span>
+      <span class="course-meta__badge">⏱ 8h</span>
+      <span class="course-meta__badge">Prérequis : Module 13</span>
     </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Packager avec electron-builder</li>
+      <li>EXE Windows, DMG macOS, AppImage Linux</li>
+      <li>Icônes, metadata, ASAR</li>
+    </ul>
 
-    <div class="alert alert--info">
-      <strong>Module en cours de rédaction.</strong> Le contenu complet (théorie, exemples, exercices, corrections, quiz, challenge) sera ajouté progressivement. La structure pédagogique est en place.
-    </div>
+    <h2>2. Installation</h2>
+    <pre><code>npm install electron-builder --save-dev</code></pre>
 
-    <h2>1. Objectifs pédagogiques</h2>
-    <p>EXE Windows, AppImage Linux, DMG macOS avec Electron Builder.</p>
+    <h2>3. package.json build</h2>
+    <pre><code>"build": {
+  "appId": "com.wazabicode.monapp",
+  "productName": "Mon App",
+  "directories": { "output": "dist" },
+  "win": { "target": "nsis", "icon": "assets/icon.ico" },
+  "mac": { "target": "dmg", "icon": "assets/icon.icns" },
+  "linux": { "target": "AppImage", "icon": "assets/icon.png" }
+},
+"scripts": {
+  "dist": "electron-builder",
+  "dist:win": "electron-builder --win",
+  "dist:mac": "electron-builder --mac",
+  "dist:linux": "electron-builder --linux"
+}</code></pre>
 
-    <h2>2. Théorie détaillée</h2>
-    <p>Contenu à venir — section théorique complète avec schémas ASCII.</p>
-
-    <h2>3. Exemples</h2>
-    <p>Exemples simples, intermédiaires et avancés à venir.</p>
-
-    <h2>4. Exercices & corrections</h2>
-    <p>Exercices pratiques avec corrections détaillées à venir.</p>
-
-    <h2>5. Quiz</h2>
-    <div class="quiz-block">
-      <h4>Quiz de validation — à compléter</h4>
-      <p>Questions à choix multiples pour valider vos acquis avant le module suivant.</p>
-    </div>
-
-    <h2>6. Bonnes pratiques</h2>
-    <p>Recommandations professionnelles spécifiques à ce module.</p>
-
-    <h2>7. Erreurs fréquentes</h2>
-    <p>Pièges courants et comment les éviter.</p>
-
-    <h2>8. Challenge de fin de chapitre</h2>
-    <p>Projet pratique pour consolider les acquis du module.</p>
+    <h2>4. Challenge</h2>
+    <p>Produire les 3 artefacts pour votre OS + tester l'installateur.</p>
   </div>
-
   <script src="../assets/js/navigation.js"></script>
   <script src="../assets/js/layout.js"></script>
   <script src="../assets/js/app.js"></script>

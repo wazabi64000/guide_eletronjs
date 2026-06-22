@@ -1,43 +1,49 @@
 # guide_eletronjs — wazabiCode
 
-Formation **HTML, CSS, JavaScript & Electron.js** : Débutant à Expert.
+Formation **Electron.js : Débutant à Expert**.
 
-## Lancer le site
+> Ce dépôt contient le **cours Electron.js** et la **plateforme e-learning** (HTML/CSS/JS) qui le diffuse.
 
-Ouvrez `index.html` dans votre navigateur, ou servez le dossier avec un serveur local :
+## Lancer la plateforme
 
 ```bash
-npx serve .
-# ou
 python3 -m http.server 8080
+# ou
+npx serve .
 ```
 
-Puis ouvrez [http://localhost:8080](http://localhost:8080).
+→ [http://localhost:8080](http://localhost:8080)
+
+Site en ligne : https://wazabi64000.github.io/guide_eletronjs/
+
+## Prérequis du cours
+
+Le cours enseigne **uniquement Electron.js**. Vous devez maîtriser :
+- HTML (structure d'interface)
+- CSS (mise en page de l'UI renderer)
+- JavaScript ES6+ (logique applicative)
 
 ## Structure
 
 ```
-├── index.html              # Accueil
-├── assets/
-│   ├── css/main.css        # Styles (navbar, sidebar, footer)
-│   └── js/
-│       ├── navigation.js   # Menu du cursus
-│       ├── layout.js       # Layout partagé
-│       └── app.js          # Interactions UI
-├── pages/                  # Chapitres du cours
-└── docs/cursus/            # Contenu source Markdown
+├── index.html              # Accueil du cursus Electron
+├── assets/                 # Plateforme e-learning (HTML/CSS/JS)
+├── pages/                  # 16 modules + 4 projets Electron
+├── docs/cursus/            # Contenu source Markdown
+└── scripts/generate-pages.js
 ```
 
-## Layout
+## Modules
 
-Toutes les pages incluent :
-- **Navbar fixe** en haut (marque wazabiCode)
-- **Sidebar** de navigation du cursus
-- **Footer fixe** wazabiCode
+| Niveau | Contenu |
+|--------|---------|
+| Débutant | Intro, installation, premiers pas, fenêtres |
+| Intermédiaire | Preload/IPC, sécurité, UI native, fichiers |
+| Avancé | SQLite, API REST, sync offline, architecture |
+| Expert | Debug, tests, packaging, déploiement |
 
-## Générer les pages manquantes
+## Générer / régénérer les pages
 
 ```bash
 node scripts/generate-pages.js
 ```
-https://wazabi64000.github.io/guide_eletronjs/

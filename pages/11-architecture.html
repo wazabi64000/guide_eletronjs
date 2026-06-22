@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 11 — Architecture propre — wazabiCode Electron</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="11-architecture">
+  <div id="page-content" class="course-content">
+    <h1>Module 11 — Architecture propre</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Avancé</span>
+      <span class="course-meta__badge">⏱ 12h</span>
+      <span class="course-meta__badge">Prérequis : Module 10</span>
+    </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Structurer un projet Electron maintenable</li>
+      <li>Séparer main / preload / renderer / services</li>
+      <li>Patterns : services, handlers IPC par domaine</li>
+    </ul>
+
+    <h2>2. Structure recommandée</h2>
+    <div class="ascii-diagram">src/
+├── main/
+│   ├── index.ts
+│   ├── windows/
+│   ├── ipc/
+│   │   ├── file.handlers.ts
+│   │   └── db.handlers.ts
+│   └── services/
+│       ├── database.service.ts
+│       └── sync.service.ts
+├── preload/
+│   └── index.ts
+└── renderer/
+    ├── index.html
+    ├── styles/
+    └── js/</div>
+
+    <h2>3. Enregistrement handlers</h2>
+    <pre><code>// main/ipc/index.js
+import { registerFileHandlers } from './file.handlers.js';
+import { registerDbHandlers } from './db.handlers.js';
+
+export function registerAllIpc() {
+  registerFileHandlers();
+  registerDbHandlers();
+}</code></pre>
+
+    <h2>4. Challenge</h2>
+    <p>Refactoriser un projet monolithique main.js en architecture modulaire.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

@@ -3,142 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Installation — wazabiCode</title>
+  <title>Module 1 — Environnement de développement Electron — wazabiCode Electron</title>
   <link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body data-page="01-installation">
-
   <div id="page-content" class="course-content">
-    <h1>Module 1 — Installation & Environnement</h1>
+    <h1>Module 1 — Environnement de développement Electron</h1>
     <div class="course-meta">
       <span class="course-meta__badge course-meta__badge--level">Débutant</span>
-      <span class="course-meta__badge">⏱ 12 heures</span>
+      <span class="course-meta__badge">⏱ 6h</span>
       <span class="course-meta__badge">Prérequis : Chapitre 0</span>
     </div>
-
-    <h2>1. Objectifs pédagogiques</h2>
+    
+    <h2>1. Objectifs</h2>
     <ul>
-      <li>Installer VS Code, Node.js, Git, SQLite et Chrome</li>
-      <li>Utiliser le terminal en ligne de commande</li>
-      <li>Comprendre npm, <code>package.json</code> et la structure d'un projet</li>
-      <li>Exécuter votre premier script JavaScript</li>
-      <li>Initialiser un dépôt Git et effectuer un premier commit</li>
+      <li>Installer Node.js LTS, VS Code, Git et Chrome</li>
+      <li>Configurer un projet Electron avec npm</li>
+      <li>Comprendre package.json, scripts et structure Electron</li>
+      <li>Lancer electron-quick-start</li>
     </ul>
 
-    <h2>2. Visual Studio Code</h2>
-    <p>Éditeur gratuit, référence pour le développement JavaScript et Electron.</p>
+    <h2>2. Outils requis</h2>
     <table>
-      <thead><tr><th>Extension</th><th>Utilité</th></tr></thead>
-      <tbody>
-        <tr><td>ESLint</td><td>Qualité du code JavaScript</td></tr>
-        <tr><td>Prettier</td><td>Formatage automatique</td></tr>
-        <tr><td>GitLens</td><td>Historique Git enrichi</td></tr>
-        <tr><td>Live Server</td><td>Prévisualisation HTML</td></tr>
-        <tr><td>SQLite Viewer</td><td>Inspection bases SQLite</td></tr>
-      </tbody>
+      <tr><th>Outil</th><th>Rôle pour Electron</th></tr>
+      <tr><td>Node.js LTS</td><td>Runtime + npm, base d'Electron</td></tr>
+      <tr><td>VS Code</td><td>Éditeur, debug Electron</td></tr>
+      <tr><td>Git</td><td>Versionnement du projet</td></tr>
+      <tr><td>Chrome DevTools</td><td>Debug du Renderer (Chromium)</td></tr>
     </table>
 
-    <h2>3. Node.js</h2>
-    <p>Runtime JavaScript hors navigateur. Inclut <strong>npm</strong> (Node Package Manager).</p>
-    <div class="ascii-diagram">┌─────────────────────────────────────────┐
-│              NODE.JS                     │
-│  ┌─────────────┐    ┌─────────────────┐ │
-│  │  V8 Engine  │    │     libuv       │ │
-│  └─────────────┘    └─────────────────┘ │
-│  ┌─────────────────────────────────────┐ │
-│  │  npm — gestionnaire de packages     │ │
-│  └─────────────────────────────────────┘ │
-└─────────────────────────────────────────┘</div>
-    <pre><code>node --version   # v22.x.x ou supérieur
-npm --version    # 10.x.x ou supérieur</code></pre>
+    <h2>3. Vérification</h2>
+    <pre><code>node --version    # v22+
+npm --version     # 10+
+git --version</code></pre>
 
-    <h2>4. Git</h2>
-    <pre><code>git --version
-git config --global user.name "Votre Nom"
-git config --global user.email "vous@email.com"</code></pre>
+    <h2>4. Premier projet Electron</h2>
+    <pre><code>mkdir mon-app-electron && cd mon-app-electron
+npm init -y
+npm install electron --save-dev</code></pre>
 
-    <h2>5. Le Terminal</h2>
-    <table>
-      <thead><tr><th>Commande</th><th>Action</th></tr></thead>
-      <tbody>
-        <tr><td><code>pwd</code></td><td>Répertoire courant</td></tr>
-        <tr><td><code>ls</code> / <code>dir</code></td><td>Lister les fichiers</td></tr>
-        <tr><td><code>cd dossier</code></td><td>Changer de répertoire</td></tr>
-        <tr><td><code>mkdir nom</code></td><td>Créer un dossier</td></tr>
-        <tr><td><code>clear</code></td><td>Effacer l'écran</td></tr>
-      </tbody>
-    </table>
-
-    <h2>6. npm et package.json</h2>
+    <h2>5. package.json Electron</h2>
     <pre><code>{
-  "name": "mon-projet",
+  "name": "mon-app-electron",
   "version": "1.0.0",
+  "main": "main.js",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js"
+    "start": "electron .",
+    "dev": "electron . --enable-logging"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
 }</code></pre>
 
-    <h2>7. Structure d'un projet</h2>
-    <div class="ascii-diagram">mon-projet/
-├── node_modules/     # Dépendances (ne pas versionner)
-├── src/              # Code source
-│   └── index.js
-├── .gitignore
+    <h2>6. Structure projet</h2>
+    <div class="ascii-diagram">mon-app-electron/
+├── main.js           # Main Process
+├── preload.js        # Pont sécurisé
+├── index.html        # UI Renderer
+├── renderer.js       # Logique UI
 ├── package.json
-└── README.md</div>
+└── assets/           # Icônes, images</div>
 
-    <h2>8. Premier script JavaScript</h2>
-    <p>Créez <code>src/index.js</code> :</p>
-    <pre><code>// src/index.js — Premier script wazabiCode
-const prenom = 'Développeur';
-const annee = new Date().getFullYear();
+    <h2>7. Extensions VS Code</h2>
+    <ul><li>ESLint, Prettier, GitLens</li><li>Electron Debug (optionnel)</li></ul>
 
-console.log(`Bienvenue ${prenom} sur wazabiCode !`);
-console.log(`Année de formation : ${annee}`);
+    <h2>8. Exercice</h2>
+    <p>Clonez <code>electron/electron-quick-start</code>, lancez <code>npm start</code>, ouvrez DevTools (Ctrl+Shift+I).</p>
 
-const modules = ['HTML', 'CSS', 'JavaScript', 'Electron'];
-modules.forEach((mod, i) => {
-  console.log(`Module ${i + 1} : ${mod}`);
-});</code></pre>
-  <pre><code>node src/index.js</code></pre>
-
-    <h2>9. Exercices</h2>
-    <div class="quiz-block">
-      <h4>Exercice — Créer un projet</h4>
-      <ol>
-        <li><code>mkdir mon-premier-projet && cd mon-premier-projet</code></li>
-        <li><code>npm init -y</code></li>
-        <li>Créer <code>index.js</code> qui affiche votre nom</li>
-        <li><code>git init && git add . && git commit -m "Premier commit"</code></li>
-      </ol>
-    </div>
-
-    <h2>10. Quiz</h2>
-    <div class="quiz-block">
-      <h4>Q1. Que contient node_modules ?</h4>
-      <label class="quiz-option"><input type="radio" name="q1" checked> Les dépendances npm installées ✓</label>
-      <label class="quiz-option"><input type="radio" name="q1"> Le code source de l'app</label>
-    </div>
-
-    <h2>11. Bonnes pratiques</h2>
-    <ul>
-      <li>Utiliser la version LTS de Node.js</li>
-      <li>Ajouter <code>node_modules/</code> au <code>.gitignore</code></li>
-      <li>Configurer ESLint + Prettier dès le début</li>
-    </ul>
-
-    <h2>12. Challenge</h2>
-    <p>
-      Créez un projet <code>wazabi-hello</code> avec un script qui lit une variable d'environnement
-      <code>USER</code> et affiche un message personnalisé. Versionnez avec Git (3 commits minimum).
-    </p>
+    <h2>9. Challenge</h2>
+    <p>Créez un projet from scratch, affichez « Hello wazabiCode » dans une fenêtre 800×600.</p>
   </div>
-
   <script src="../assets/js/navigation.js"></script>
   <script src="../assets/js/layout.js"></script>
   <script src="../assets/js/app.js"></script>

@@ -17,7 +17,7 @@
       <div class="navbar__title"><span>wazabi</span>Code — ${WAZABI_NAV.courseTitle}</div>
     </a>
     <div class="navbar__actions">
-      <span class="navbar__badge">320h · Débutant → Expert</span>
+      <span class="navbar__badge">~180h · Electron.js</span>
       <button class="navbar__toggle" id="sidebar-toggle" aria-label="Menu">☰</button>
     </div>
   `;
@@ -58,7 +58,7 @@
   footer.className = 'footer';
   footer.innerHTML = `
     <div class="footer__brand"><strong>wazabi</strong>Code</div>
-    <div class="footer__copy">© ${new Date().getFullYear()} wazabiCode — Formation HTML, CSS, JavaScript & Electron.js</div>
+    <div class="footer__copy">© ${new Date().getFullYear()} wazabiCode — Formation Electron.js</div>
     <div class="footer__links">
       <a href="${base}index.html">Accueil</a>
       <a href="${base}pages/00-introduction.html">Cours</a>

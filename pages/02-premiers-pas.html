@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 2 — Premiers pas avec Electron — wazabiCode Electron</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="02-premiers-pas">
+  <div id="page-content" class="course-content">
+    <h1>Module 2 — Premiers pas avec Electron</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Débutant</span>
+      <span class="course-meta__badge">⏱ 10h</span>
+      <span class="course-meta__badge">Prérequis : Module 1</span>
+    </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Créer une app Electron complète (main, preload, renderer)</li>
+      <li>Comprendre le cycle de vie <code>app</code></li>
+      <li>Charger du HTML local et des assets</li>
+      <li>Configurer webPreferences correctement</li>
+    </ul>
+
+    <h2>2. main.js complet</h2>
+    <pre><code>import { app, BrowserWindow } from 'electron';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+let mainWindow;
+
+const createWindow = () => {
+  mainWindow = new BrowserWindow({
+    width: 1000,
+    height: 700,
+    title: 'Mon App Electron',
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  });
+  mainWindow.loadFile(path.join(__dirname, 'index.html'));
+};
+
+app.whenReady().then(createWindow);
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});</code></pre>
+
+    <h2>3. preload.js</h2>
+    <pre><code>import { contextBridge } from 'electron';
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  platform: process.platform,
+  versions: {
+    electron: process.versions.electron,
+    chrome: process.versions.chrome,
+    node: process.versions.node,
+  },
+});</code></pre>
+
+    <h2>4. index.html + renderer.js</h2>
+    <pre><code>&lt;!-- index.html --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;&lt;meta charset="UTF-8"&gt;&lt;title&gt;Mon App&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Bienvenue dans Electron&lt;/h1&gt;
+  &lt;p id="info"&gt;&lt;/p&gt;
+  &lt;script src="renderer.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <pre><code>// renderer.js
+document.getElementById('info').textContent =
+  `Plateforme: ${window.electronAPI.platform} | Electron ${window.electronAPI.versions.electron}`;</code></pre>
+
+    <h2>5. Schéma flux de démarrage</h2>
+    <div class="ascii-diagram">npm start → Node lance main.js → app.whenReady()
+  → new BrowserWindow → preload.js → index.html → renderer.js</div>
+
+    <h2>6. Exercice</h2>
+    <p>Ajoutez un bouton qui affiche la version de Chrome dans l'interface.</p>
+
+    <h2>7. Challenge</h2>
+    <p>Créez une fenêtre avec logo, titre personnalisé et fond CSS. Versionnez avec Git.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

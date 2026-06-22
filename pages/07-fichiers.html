@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 7 — Système de fichiers — wazabiCode Electron</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="07-fichiers">
+  <div id="page-content" class="course-content">
+    <h1>Module 7 — Système de fichiers</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Intermédiaire</span>
+      <span class="course-meta__badge">⏱ 8h</span>
+      <span class="course-meta__badge">Prérequis : Module 6</span>
+    </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Lire/écrire fichiers depuis le Main Process</li>
+      <li>Utiliser app.getPath('userData')</li>
+      <li>Drag & drop de fichiers</li>
+      <li>Watchers fs.watch</li>
+    </ul>
+
+    <h2>2. Chemins Electron</h2>
+    <pre><code>import { app } from 'electron';
+import path from 'node:path';
+
+const userData = app.getPath('userData');
+const configPath = path.join(userData, 'config.json');</code></pre>
+
+    <h2>3. Lecture / écriture</h2>
+    <pre><code>import fs from 'node:fs/promises';
+
+await fs.writeFile(configPath, JSON.stringify(config, null, 2));
+const data = JSON.parse(await fs.readFile(configPath, 'utf-8'));</code></pre>
+
+    <h2>4. Challenge</h2>
+    <p>Éditeur Markdown : ouvrir, modifier, sauvegarder un fichier .md via IPC + dialog.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

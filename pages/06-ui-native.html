@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 6 — UI native, menus & notifications — wazabiCode Electron</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="06-ui-native">
+  <div id="page-content" class="course-content">
+    <h1>Module 6 — UI native, menus & notifications</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Intermédiaire</span>
+      <span class="course-meta__badge">⏱ 10h</span>
+      <span class="course-meta__badge">Prérequis : Module 5</span>
+    </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Créer Menu, MenuItem, Tray</li>
+      <li>Utiliser dialog (open, save, message)</li>
+      <li>Notifications système nativeNotification</li>
+      <li>Raccourcis clavier globaux</li>
+    </ul>
+
+    <h2>2. Menu application</h2>
+    <pre><code>import { Menu, app } from 'electron';
+
+const template = [
+  { label: 'Fichier', submenu: [
+    { label: 'Nouveau', accelerator: 'CmdOrCtrl+N', click: createWindow },
+    { type: 'separator' },
+    { role: 'quit' },
+  ]},
+  { label: 'Édition', submenu: [
+    { role: 'undo' }, { role: 'redo' }, { type: 'separator' },
+    { role: 'cut' }, { role: 'copy' }, { role: 'paste' },
+  ]},
+];
+Menu.setApplicationMenu(Menu.buildFromTemplate(template));</code></pre>
+
+    <h2>3. Dialog</h2>
+    <pre><code>import { dialog } from 'electron';
+
+const { filePaths } = await dialog.showOpenDialog({
+  properties: ['openFile'],
+  filters: [{ name: 'Texte', extensions: ['txt', 'md'] }],
+});</code></pre>
+
+    <h2>4. Notifications</h2>
+    <pre><code>import { Notification } from 'electron';
+new Notification({ title: 'Sauvegarde', body: 'Fichier enregistré.' }).show();</code></pre>
+
+    <h2>5. Challenge</h2>
+    <p>Menu Fichier → Ouvrir / Enregistrer avec dialog natif + notification succès.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

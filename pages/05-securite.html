@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 5 — Sécurité Electron — wazabiCode Electron</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="05-securite">
+  <div id="page-content" class="course-content">
+    <h1>Module 5 — Sécurité Electron</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Intermédiaire</span>
+      <span class="course-meta__badge">⏱ 8h</span>
+      <span class="course-meta__badge">Prérequis : Module 4</span>
+    </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Appliquer les recommandations officielles Electron</li>
+      <li>Configurer CSP, sandbox, contextIsolation</li>
+      <li>Valider les entrées IPC</li>
+      <li>Éviter les vulnérabilités XSS → RCE</li>
+    </ul>
+
+    <h2>2. Checklist sécurité</h2>
+    <table>
+      <tr><th>Règle</th><th>Valeur</th></tr>
+      <tr><td>nodeIntegration</td><td>false</td></tr>
+      <tr><td>contextIsolation</td><td>true</td></tr>
+      <tr><td>sandbox</td><td>true (recommandé)</td></tr>
+      <tr><td>enableRemoteModule</td><td>false (déprécié)</td></tr>
+    </table>
+
+    <h2>3. Validation IPC</h2>
+    <pre><code>ipcMain.handle('db:query', async (_event, sql) => {
+  // JAMAIS exécuter du SQL arbitraire du renderer !
+  if (typeof sql !== 'string') throw new Error('Invalid input');
+  const allowed = ['SELECT * FROM notes'];
+  if (!allowed.includes(sql)) throw new Error('Query not allowed');
+  // ...
+});</code></pre>
+
+    <h2>4. CSP</h2>
+    <pre><code>&lt;meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"&gt;</code></pre>
+
+    <h2>5. Erreurs critiques</h2>
+    <div class="alert alert--warning">XSS dans le renderer + nodeIntegration = exécution code arbitraire sur la machine.</div>
+
+    <h2>6. Challenge</h2>
+    <p>Auditez un projet Electron open source et listez 5 points de sécurité.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>
