@@ -19,9 +19,10 @@
     <p>Application minimale : une page, un bouton, compilée en installateur.</p>
     <h2>Étapes</h2>
     <ol>
+      <li><code>npm init -y</code> → corriger <code>"main": "main.js"</code> dans package.json</li>
       <li><code>npm install electron --save-dev</code></li>
-      <li>Créer index.html + main.js</li>
-      <li><code>npm start</code> — vérifier</li>
+      <li>Créer <code>index.html</code> puis <code>main.js</code> (dans cet ordre)</li>
+      <li><code>npm start</code> — vérifier la fenêtre</li>
       <li><code>npm run dist</code> — obtenir l'installateur</li>
     </ol>
     <h2>Livrable</h2>

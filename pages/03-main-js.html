@@ -60,15 +60,20 @@ app.on('activate', () => {
       <tr><td><code>app.whenReady()</code></td><td>Attend qu'Electron soit initialisé</td></tr>
     </table>
 
-    <h2>4. Mettre à jour package.json</h2>
-    <pre><code>"main": "main.js",
-"scripts": {
-  "start": "electron ."
+    <h2>4. Vérifier package.json</h2>
+    <p>Assurez-vous que ces lignes sont présentes (normalement fait au chapitre 1) :</p>
+    <pre><code>{
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  }
 }</code></pre>
 
-    <h2>5. Lancer !</h2>
-    <pre><code>npm start</code></pre>
-    <p>🎉 Votre première application Desktop s'ouvre !</p>
+    <h2>5. Lancer l'application !</h2>
+    <pre><code>npm start
+# équivalent :
+npx electron .</code></pre>
+    <p>🎉 Votre première fenêtre Desktop s'ouvre avec <code>index.html</code> !</p>
 
     <h2>6. DevTools</h2>
     <p>Dans la fenêtre : <code>Ctrl+Shift+I</code> (Windows/Linux) ou <code>Cmd+Option+I</code> (macOS) pour ouvrir les outils de développement Chrome.</p>
@@ -77,10 +82,13 @@ app.on('activate', () => {
     <p>Changez la taille de la fenêtre à 1200×800 et modifiez le titre.</p>
 
     <h2>8. Erreurs fréquentes</h2>
-    <div class="alert alert--warning">
-      <strong>Cannot find module 'electron'</strong> → Exécutez <code>npm install electron --save-dev</code><br>
-      <strong>Page blanche</strong> → Vérifiez le chemin vers <code>index.html</code>
-    </div>
+    <table>
+      <tr><th>Erreur</th><th>Solution</th></tr>
+      <tr><td><code>Cannot find module 'index.js'</code></td><td>Dans <code>package.json</code>, remplacez <code>"main": "index.js"</code> par <code>"main": "main.js"</code></td></tr>
+      <tr><td><code>Cannot find module 'main.js'</code></td><td>Créez le fichier <code>main.js</code> (code section 2 ci-dessus)</td></tr>
+      <tr><td><code>Cannot find module 'electron'</code></td><td><code>npm install electron --save-dev</code></td></tr>
+      <tr><td>Page blanche</td><td>Vérifiez <code>win.loadFile(..., 'index.html')</code></td></tr>
+    </table>
   </div>
   <script src="../assets/js/navigation.js"></script>
   <script src="../assets/js/layout.js"></script>
