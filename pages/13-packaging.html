@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 13 — Compiler en .exe · .dmg · AppImage — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="13-packaging">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 13 — Compiler en .exe · .dmg · AppImage</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Avancé</span>
+      <span class="course-meta__badge">⏱ 6h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 12 (tests OK)</span>
+    </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Installer <strong>electron-builder</strong></li>
+      <li>Générer un installateur Windows (.exe), macOS (.dmg), Linux (.AppImage)</li>
+    </ul>
+
+    <h2>2. Installation</h2>
+    <pre><code>npm install electron-builder --save-dev</code></pre>
+
+    <h2>3. package.json</h2>
+    <pre><code>{
+  "name": "mon-app-electron",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": "wazabiCode",
+  "scripts": {
+    "start": "electron .",
+    "test": "jest",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.wazabicode.monapp",
+    "productName": "Mon App Electron",
+    "directories": { "output": "dist" },
+    "files": ["**/*", "!tests/**", "!dist/**"],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  }
+}</code></pre>
+
+    <h2>4. Workflow recommandé</h2>
+    <div class="ascii-diagram">1. npm test          ← tests passent
+2. npm start           ← test manuel
+3. npm run dist        ← génère dist/
+4. Installer et tester le .exe / .dmg / .AppImage</div>
+
+    <h2>5. Commandes</h2>
+    <pre><code>npm run dist         # OS actuel
+npm run dist:win     # Windows (depuis n'importe quel OS avec Wine si Linux)
+npm run dist:mac     # macOS (nécessite un Mac pour signer)
+npm run dist:linux   # Linux AppImage</code></pre>
+
+    <h2>6. Résultat dans dist/</h2>
+    <table>
+      <tr><th>OS</th><th>Fichier généré</th></tr>
+      <tr><td>Windows</td><td><code>Mon App Setup 1.0.0.exe</code></td></tr>
+      <tr><td>macOS</td><td><code>Mon App-1.0.0.dmg</code></td></tr>
+      <tr><td>Linux</td><td><code>Mon App-1.0.0.AppImage</code></td></tr>
+    </table>
+
+    <h2>7. Exercice</h2>
+    <p>Ajoutez une icône dans <code>assets/</code>, lancez <code>npm run dist</code>, installez votre propre application.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

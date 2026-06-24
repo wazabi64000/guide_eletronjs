@@ -1,50 +1,35 @@
-# Module 1 — Environnement de développement Electron
+# Chapitre 1 — Installation officielle d'Electron
 
-**Durée : 6 heures** | **Niveau : Débutant** | **Prérequis : Chapitre 0 + bases HTML/CSS/JS**
+**Source :** [Instructions d'installation avancée — Electron](https://www.electronjs.org/fr/docs/latest/tutorial/installation)
 
----
-
-## Objectifs
-
-- Installer Node.js LTS, VS Code, Git, Chrome
-- Initialiser un projet npm pour Electron
-- Configurer `package.json` et le script `electron .`
-- Lancer electron-quick-start
-
-## Outils
-
-| Outil | Rôle |
-|-------|------|
-| Node.js LTS | Runtime Electron + npm |
-| VS Code | Édition et debug |
-| Git | Versionnement |
-| Chrome DevTools | Debug Renderer (Chromium) |
-
-## Premier projet
+## Installation recommandée
 
 ```bash
-mkdir mon-app-electron && cd mon-app-electron
-npm init -y
 npm install electron --save-dev
 ```
 
-## package.json
+## Exécution directe
 
-```json
-{
-  "main": "main.js",
-  "type": "module",
-  "scripts": { "start": "electron ." }
-}
+```bash
+npx electron .
 ```
 
-## Structure
+## Dépannage
 
+| Erreur | Solution |
+|--------|----------|
+| ELIFECYCLE, ETIMEDOUT | Problème réseau — réessayer, utiliser un miroir |
+| EACCESS | Corriger les droits npm |
+| Téléchargement lent | `npm install --verbose electron` |
+
+## Miroir
+
+```bash
+ELECTRON_MIRROR="https://npmmirror.com/mirrors/electron/" npm install electron --save-dev
 ```
-mon-app-electron/
-├── main.js
-├── preload.js
-├── index.html
-├── renderer.js
-└── package.json
+
+## CI sans binaire
+
+```bash
+ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm install
 ```

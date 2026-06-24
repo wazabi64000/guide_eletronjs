@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 2 — Votre première page HTML — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="02-premiere-page">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 2 — Votre première page HTML</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Débutant</span>
+      <span class="course-meta__badge">⏱ 3h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 1</span>
+    </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Créer un fichier <code>index.html</code> from scratch</li>
+      <li>Comprendre que l'interface Electron = pages web</li>
+      <li>Préparer le contenu avant de connecter main.js</li>
+    </ul>
+
+    <h2>2. Créer index.html</h2>
+    <p>Dans votre dossier <code>mon-app-electron</code>, créez :</p>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Ma première app Electron&lt;/title&gt;
+  &lt;style&gt;
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: #1a1a2e;
+      color: #eee;
+    }
+    h1 { color: #22d3ee; }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #22d3ee;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Bienvenue dans Electron !&lt;/h1&gt;
+  &lt;p&gt;Ceci est ma première page affichée dans une fenêtre Desktop.&lt;/p&gt;
+  &lt;button id="btn"&gt;Cliquez-moi&lt;/button&gt;
+  &lt;p id="message"&gt;&lt;/p&gt;
+  &lt;script&gt;
+    document.getElementById('btn').addEventListener('click', () =&gt; {
+      document.getElementById('message').textContent =
+        'Bravo ! Votre page JavaScript fonctionne.';
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+    <h2>3. Tester dans le navigateur (optionnel)</h2>
+    <p>Ouvrez <code>index.html</code> dans Chrome pour vérifier le rendu. Ce n'est <em>pas</em> encore Electron, mais utile pour déboguer le HTML/CSS.</p>
+
+    <h2>4. Structure actuelle</h2>
+    <div class="ascii-diagram">mon-app-electron/
+├── package.json
+├── node_modules/
+└── index.html        ← vous venez de créer ceci</div>
+
+    <h2>5. Exercice</h2>
+    <p>Personnalisez le titre, les couleurs et ajoutez un paragraphe « Créé avec wazabiCode ».</p>
+
+    <h2>6. Prochaine étape</h2>
+    <p>Au chapitre 3, nous créons <code>main.js</code> pour afficher cette page dans une vraie fenêtre Electron.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

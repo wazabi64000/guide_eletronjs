@@ -1,49 +1,32 @@
 # guide_eletronjs — wazabiCode
 
-Formation **Electron.js : Débutant à Expert**.
-
-> Ce dépôt contient le **cours Electron.js** et la **plateforme e-learning** (HTML/CSS/JS) qui le diffuse.
+Formation **Electron.js : de zéro à l'exécutable** — basée sur la [documentation officielle](https://www.electronjs.org/fr/docs/latest/tutorial/installation).
 
 ## Lancer la plateforme
 
 ```bash
 python3 -m http.server 8080
-# ou
-npx serve .
 ```
 
-→ [http://localhost:8080](http://localhost:8080)
+→ http://localhost:8080 · https://wazabi64000.github.io/guide_eletronjs/
 
-Site en ligne : https://wazabi64000.github.io/guide_eletronjs/
+## Parcours
 
-## Prérequis du cours
-
-Le cours enseigne **uniquement Electron.js**. Vous devez maîtriser :
-- HTML (structure d'interface)
-- CSS (mise en page de l'UI renderer)
-- JavaScript ES6+ (logique applicative)
+1. **Installation** — `npm install electron --save-dev`
+2. **Première page** — `index.html` + `main.js`
+3. **IPC & multi-pages** — application complète
+4. **Tests** — Jest + Playwright
+5. **Compilation** — `.exe` / `.dmg` / `.AppImage`
 
 ## Structure
 
 ```
-├── index.html              # Accueil du cursus Electron
-├── assets/                 # Plateforme e-learning (HTML/CSS/JS)
-├── pages/                  # 16 modules + 4 projets Electron
-├── docs/cursus/            # Contenu source Markdown
+├── index.html
+├── assets/          # Plateforme e-learning (HTML/CSS/JS)
+├── pages/           # 15 chapitres + 3 projets Electron
 └── scripts/generate-pages.js
 ```
 
-## Modules
-
-| Niveau | Contenu |
-|--------|---------|
-| Débutant | Intro, installation, premiers pas, fenêtres |
-| Intermédiaire | Preload/IPC, sécurité, UI native, fichiers |
-| Avancé | SQLite, API REST, sync offline, architecture |
-| Expert | Debug, tests, packaging, déploiement |
-
-## Générer / régénérer les pages
-
 ```bash
-node scripts/generate-pages.js
+node scripts/generate-pages.js --force
 ```

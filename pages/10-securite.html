@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 10 — Sécurité (checklist officielle) — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="10-securite">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 10 — Sécurité (checklist officielle)</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Intermédiaire</span>
+      <span class="course-meta__badge">⏱ 4h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 9</span>
+    </div>
+    
+    <div class="alert alert--info">
+      📚 <a href="https://www.electronjs.org/fr/docs/latest/tutorial/security" target="_blank" rel="noopener">Sécurité — Electron</a>
+    </div>
+    <h2>1. Checklist obligatoire</h2>
+    <table>
+      <tr><th>Règle</th><th>Valeur</th></tr>
+      <tr><td>nodeIntegration</td><td><code>false</code></td></tr>
+      <tr><td>contextIsolation</td><td><code>true</code></td></tr>
+      <tr><td>sandbox</td><td><code>true</code> (recommandé)</td></tr>
+      <tr><td>Contenu distant</td><td>Éviter ou CSP strict</td></tr>
+    </table>
+
+    <h2>2. Content Security Policy</h2>
+    <pre><code>&lt;meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"&gt;</code></pre>
+
+    <h2>3. Ne jamais faire</h2>
+    <div class="alert alert--warning">
+      ❌ <code>nodeIntegration: true</code> + contenu HTML non fiable = faille critique<br>
+      ❌ Exécuter du SQL ou des commandes shell envoyées par le Renderer sans validation
+    </div>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

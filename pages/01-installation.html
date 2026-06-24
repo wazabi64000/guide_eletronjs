@@ -3,77 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 1 — Environnement de développement Electron — wazabiCode Electron</title>
+  <title>Chapitre 1 — Installation officielle d'Electron — wazabiCode</title>
   <link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body data-page="01-installation">
   <div id="page-content" class="course-content">
-    <h1>Module 1 — Environnement de développement Electron</h1>
+    <h1>Chapitre 1 — Installation officielle d'Electron</h1>
     <div class="course-meta">
       <span class="course-meta__badge course-meta__badge--level">Débutant</span>
-      <span class="course-meta__badge">⏱ 6h</span>
+      <span class="course-meta__badge">⏱ 3h</span>
       <span class="course-meta__badge">Prérequis : Chapitre 0</span>
     </div>
     
+    <div class="alert alert--info">
+      📚 Source officielle :
+      <a href="https://www.electronjs.org/fr/docs/latest/tutorial/installation" target="_blank" rel="noopener">
+        Instructions d'installation avancée — Electron
+      </a>
+    </div>
     <h2>1. Objectifs</h2>
     <ul>
-      <li>Installer Node.js LTS, VS Code, Git et Chrome</li>
-      <li>Configurer un projet Electron avec npm</li>
-      <li>Comprendre package.json, scripts et structure Electron</li>
-      <li>Lancer electron-quick-start</li>
+      <li>Installer Node.js et vérifier npm</li>
+      <li>Installer Electron comme dépendance de développement</li>
+      <li>Lancer Electron avec <code>npx electron .</code></li>
+      <li>Résoudre les erreurs d'installation courantes</li>
     </ul>
 
-    <h2>2. Outils requis</h2>
-    <table>
-      <tr><th>Outil</th><th>Rôle pour Electron</th></tr>
-      <tr><td>Node.js LTS</td><td>Runtime + npm, base d'Electron</td></tr>
-      <tr><td>VS Code</td><td>Éditeur, debug Electron</td></tr>
-      <tr><td>Git</td><td>Versionnement du projet</td></tr>
-      <tr><td>Chrome DevTools</td><td>Debug du Renderer (Chromium)</td></tr>
-    </table>
+    <h2>2. Installer Node.js</h2>
+    <p>Téléchargez la version <strong>LTS</strong> sur <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>, puis vérifiez :</p>
+    <pre><code>node --version   # ex: v22.x.x
+npm --version    # ex: 10.x.x</code></pre>
 
-    <h2>3. Vérification</h2>
-    <pre><code>node --version    # v22+
-npm --version     # 10+
-git --version</code></pre>
-
-    <h2>4. Premier projet Electron</h2>
-    <pre><code>mkdir mon-app-electron && cd mon-app-electron
+    <h2>3. Méthode officielle recommandée</h2>
+    <p>La documentation Electron recommande d'installer Electron en <strong>dépendance de développement</strong> dans votre projet :</p>
+    <pre><code>mkdir mon-app-electron
+cd mon-app-electron
 npm init -y
 npm install electron --save-dev</code></pre>
+    <p>Lors du <code>postinstall</code>, npm télécharge automatiquement le binaire Electron pour votre OS via <code>@electron/get</code>.</p>
 
-    <h2>5. package.json Electron</h2>
+    <h2>4. Exécution directe avec npx</h2>
+    <p>Sans installer dans le projet, vous pouvez tester Electron ainsi :</p>
+    <pre><code>npx electron .</code></pre>
+    <p>Cette commande lance Electron dans le dossier courant. <em>Aucune dépendance de votre app n'est installée.</em></p>
+
+    <h2>5. package.json minimal</h2>
     <pre><code>{
   "name": "mon-app-electron",
   "version": "1.0.0",
   "main": "main.js",
-  "type": "module",
   "scripts": {
-    "start": "electron .",
-    "dev": "electron . --enable-logging"
+    "start": "electron ."
   },
   "devDependencies": {
     "electron": "^33.0.0"
   }
 }</code></pre>
+    <p>Le champ <code>"main"</code> indique le point d'entrée (Main Process). Lancez avec :</p>
+    <pre><code>npm start</code></pre>
 
-    <h2>6. Structure projet</h2>
-    <div class="ascii-diagram">mon-app-electron/
-├── main.js           # Main Process
-├── preload.js        # Pont sécurisé
-├── index.html        # UI Renderer
-├── renderer.js       # Logique UI
-├── package.json
-└── assets/           # Icônes, images</div>
+    <h2>6. Personnalisation (doc officielle)</h2>
+    <table>
+      <tr><th>Option</th><th>Commande</th></tr>
+      <tr><td>Architecture x64 sur ARM</td><td><code>npm install --arch=x64 electron</code></td></tr>
+      <tr><td>Plateforme Windows depuis Linux</td><td><code>npm install --platform=win32 electron</code></td></tr>
+      <tr><td>Version alpha/beta</td><td><code>npm install electron@beta --save-dev</code></td></tr>
+      <tr><td>Sans télécharger le binaire (CI)</td><td><code>ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm install</code></td></tr>
+    </table>
 
-    <h2>7. Extensions VS Code</h2>
-    <ul><li>ESLint, Prettier, GitLens</li><li>Electron Debug (optionnel)</li></ul>
+    <h2>7. Miroir (réseau lent ou Chine)</h2>
+    <pre><code>export ELECTRON_MIRROR="https://npmmirror.com/mirrors/electron/"
+npm install electron --save-dev</code></pre>
 
-    <h2>8. Exercice</h2>
-    <p>Clonez <code>electron/electron-quick-start</code>, lancez <code>npm start</code>, ouvrez DevTools (Ctrl+Shift+I).</p>
+    <h2>8. Résolution des problèmes (officiel)</h2>
+    <table>
+      <tr><th>Erreur</th><th>Cause probable</th><th>Solution</th></tr>
+      <tr><td>ELIFECYCLE, ETIMEDOUT, ECONNRESET</td><td>Réseau</td><td>Réessayer, changer de réseau, miroir</td></tr>
+      <tr><td>EACCESS</td><td>Droits npm</td><td>Corriger permissions npm</td></tr>
+      <tr><td>Téléchargement bloqué</td><td>Proxy</td><td>Variable <code>ELECTRON_GET_USE_PROXY=1</code></td></tr>
+    </table>
+    <pre><code># Voir la progression du téléchargement
+npm install --verbose electron</code></pre>
 
-    <h2>9. Challenge</h2>
-    <p>Créez un projet from scratch, affichez « Hello wazabiCode » dans une fenêtre 800×600.</p>
+    <h2>9. Exercice</h2>
+    <ol>
+      <li>Créez le dossier <code>mon-app-electron</code></li>
+      <li>Exécutez <code>npm init -y</code> puis <code>npm install electron --save-dev</code></li>
+      <li>Vérifiez que <code>node_modules/electron</code> existe</li>
+    </ol>
+
+    <h2>10. Challenge</h2>
+    <p>Installez Electron avec <code>--verbose</code> et notez où le binaire est mis en cache sur votre OS (voir doc : <code>~/.cache/electron/</code> sur Linux).</p>
   </div>
   <script src="../assets/js/navigation.js"></script>
   <script src="../assets/js/layout.js"></script>

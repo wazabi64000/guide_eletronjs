@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 11 — Déboguer son application — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="11-debugging">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 11 — Déboguer son application</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Intermédiaire</span>
+      <span class="course-meta__badge">⏱ 4h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 10</span>
+    </div>
+    
+    <h2>1. Renderer — DevTools</h2>
+    <pre><code>mainWindow.webContents.openDevTools(); // mode dev uniquement</code></pre>
+
+    <h2>2. Main Process — VS Code</h2>
+    <pre><code>// .vscode/launch.json
+{
+  "version": "0.2.0",
+  "configurations": [{
+    "name": "Debug Electron",
+    "type": "node",
+    "request": "launch",
+    "cwd": "${workspaceFolder}",
+    "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+    "args": ["."],
+    "outputCapture": "std"
+  }]
+}</code></pre>
+
+    <h2>3. Logs</h2>
+    <pre><code>npm install electron-log --save
+// main.js
+const log = require('electron-log');
+log.info('Application démarrée');</code></pre>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

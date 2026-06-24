@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 3 — Le fichier main.js — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="03-main-js">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 3 — Le fichier main.js</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Débutant</span>
+      <span class="course-meta__badge">⏱ 4h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 2</span>
+    </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Créer <code>main.js</code> ligne par ligne</li>
+      <li>Ouvrir une fenêtre et charger <code>index.html</code></li>
+      <li>Lancer l'app avec <code>npm start</code></li>
+    </ul>
+
+    <h2>2. main.js — version minimale</h2>
+    <pre><code>// main.js — Point d'entrée Electron (Main Process)
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 900,
+    height: 600,
+    title: 'Ma première app Electron',
+  });
+
+  // Charge index.html dans la fenêtre
+  win.loadFile(path.join(__dirname, 'index.html'));
+}
+
+// Quand Electron est prêt, créer la fenêtre
+app.whenReady().then(createWindow);
+
+// Quitter sur Windows/Linux quand toutes les fenêtres sont fermées
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+
+// macOS : recréer une fenêtre si l'utilisateur clique sur l'icône dock
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});</code></pre>
+
+    <h2>3. Explication ligne par ligne</h2>
+    <table>
+      <tr><th>Ligne</th><th>Rôle</th></tr>
+      <tr><td><code>require('electron')</code></td><td>Importe l'API Electron côté Node.js</td></tr>
+      <tr><td><code>BrowserWindow</code></td><td>Crée une fenêtre avec Chromium intégré</td></tr>
+      <tr><td><code>win.loadFile()</code></td><td>Affiche votre page HTML locale</td></tr>
+      <tr><td><code>app.whenReady()</code></td><td>Attend qu'Electron soit initialisé</td></tr>
+    </table>
+
+    <h2>4. Mettre à jour package.json</h2>
+    <pre><code>"main": "main.js",
+"scripts": {
+  "start": "electron ."
+}</code></pre>
+
+    <h2>5. Lancer !</h2>
+    <pre><code>npm start</code></pre>
+    <p>🎉 Votre première application Desktop s'ouvre !</p>
+
+    <h2>6. DevTools</h2>
+    <p>Dans la fenêtre : <code>Ctrl+Shift+I</code> (Windows/Linux) ou <code>Cmd+Option+I</code> (macOS) pour ouvrir les outils de développement Chrome.</p>
+
+    <h2>7. Exercice</h2>
+    <p>Changez la taille de la fenêtre à 1200×800 et modifiez le titre.</p>
+
+    <h2>8. Erreurs fréquentes</h2>
+    <div class="alert alert--warning">
+      <strong>Cannot find module 'electron'</strong> → Exécutez <code>npm install electron --save-dev</code><br>
+      <strong>Page blanche</strong> → Vérifiez le chemin vers <code>index.html</code>
+    </div>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

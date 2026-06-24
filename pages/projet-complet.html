@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projet 3 — Application testée & compilée — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="projet-complet">
+  <div id="page-content" class="course-content">
+    <h1>Projet 3 — Application testée & compilée</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Avancé</span>
+      <span class="course-meta__badge">⏱ 15h</span>
+      <span class="course-meta__badge">Prérequis : Tous les chapitres</span>
+    </div>
+    
+    <h2>Objectif final du cursus</h2>
+    <p>Livrable professionnel : app Electron complète, testée, packagée sur 3 OS.</p>
+    <h2>Checklist</h2>
+    <ul>
+      <li>☐ Structure propre (main, preload, pages/, assets/)</li>
+      <li>☐ Sécurité : contextIsolation, pas de nodeIntegration</li>
+      <li>☐ Multi-pages avec navigation</li>
+      <li>☐ Menus + dialogs fichiers</li>
+      <li>☐ ≥ 5 tests Jest + 2 tests Playwright</li>
+      <li>☐ <code>npm run dist</code> → .exe ou .AppImage ou .dmg</li>
+      <li>☐ README installation pour l'utilisateur final</li>
+    </ul>
+    <div class="ascii-diagram">PARCOURS COMPLET :
+Zéro → npm install electron → première page → main.js
+→ preload/IPC → multi-pages → menus/fichiers
+→ sécurité → tests → electron-builder → installateur</div>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

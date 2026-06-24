@@ -17,7 +17,7 @@
       <div class="navbar__title"><span>wazabi</span>Code — ${WAZABI_NAV.courseTitle}</div>
     </a>
     <div class="navbar__actions">
-      <span class="navbar__badge">~180h · Electron.js</span>
+      <span class="navbar__badge">~70h · Doc officielle Electron</span>
       <button class="navbar__toggle" id="sidebar-toggle" aria-label="Menu">☰</button>
     </div>
   `;

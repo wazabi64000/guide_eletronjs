@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 9 — Ouvrir & enregistrer des fichiers — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="09-fichiers">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 9 — Ouvrir & enregistrer des fichiers</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Intermédiaire</span>
+      <span class="course-meta__badge">⏱ 5h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 8</span>
+    </div>
+    
+    <h2>1. Dialog Ouvrir / Enregistrer</h2>
+    <pre><code>const { dialog } = require('electron');
+
+ipcMain.handle('dialog:open', async () => {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{ name: 'Texte', extensions: ['txt', 'md'] }],
+  });
+  if (canceled) return null;
+  return fs.readFileSync(filePaths[0], 'utf-8');
+});
+
+ipcMain.handle('dialog:save', async (_e, contenu) => {
+  const { canceled, filePath } = await dialog.showSaveDialog({
+    filters: [{ name: 'Texte', extensions: ['txt'] }],
+  });
+  if (canceled) return false;
+  fs.writeFileSync(filePath, contenu, 'utf-8');
+  return true;
+});</code></pre>
+
+    <h2>2. preload.js</h2>
+    <pre><code>contextBridge.exposeInMainWorld('api', {
+  ouvrir: () => ipcRenderer.invoke('dialog:open'),
+  enregistrer: (c) => ipcRenderer.invoke('dialog:save', c),
+});</code></pre>
+
+    <h2>3. Challenge</h2>
+    <p>Éditeur texte complet : Nouveau, Ouvrir, Enregistrer via menu + raccourcis clavier.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

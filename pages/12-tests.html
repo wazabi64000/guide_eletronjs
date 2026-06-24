@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 12 — Tests automatisés — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="12-tests">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 12 — Tests automatisés</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Intermédiaire</span>
+      <span class="course-meta__badge">⏱ 6h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 11</span>
+    </div>
+    
+    <h2>1. Objectifs</h2>
+    <p>Tester <strong>avant</strong> de compiler en .exe / .dmg. Deux niveaux : unitaires et E2E.</p>
+
+    <h2>2. Tests unitaires — Jest</h2>
+    <pre><code>npm install jest --save-dev
+
+// utils/format.js
+export function formaterTitre(t) { return t.trim() || 'Sans titre'; }
+
+// utils/format.test.js
+import { formaterTitre } from './format.js';
+test('titre vide', () => expect(formaterTitre('')).toBe('Sans titre'));</code></pre>
+    <pre><code>// package.json
+"scripts": { "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js" }</code></pre>
+
+    <h2>3. Tests E2E — Playwright</h2>
+    <pre><code>npm install @playwright/test --save-dev
+npx playwright install</code></pre>
+    <pre><code>// tests/electron.spec.js
+const { test, expect, _electron: electron } = require('@playwright/test');
+
+test('fenêtre principale', async () => {
+  const app = await electron.launch({ args: ['.'] });
+  const window = await app.firstWindow();
+  await expect(window).toHaveTitle(/Ma première app/);
+  await window.click('#btn');
+  await expect(window.locator('#message')).not.toBeEmpty();
+  await app.close();
+});</code></pre>
+
+    <h2>4. Lancer les tests</h2>
+    <pre><code>npm test
+npx playwright test</code></pre>
+
+    <h2>5. Challenge</h2>
+    <p>Écrivez 3 tests unitaires + 1 test E2E qui vérifie le bouton de votre page d'accueil.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

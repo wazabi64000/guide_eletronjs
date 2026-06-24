@@ -3,26 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projet Débutant — Bloc-notes Desktop — wazabiCode Electron</title>
+  <title>Projet 2 — Bloc-notes multi-pages — wazabiCode</title>
   <link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body data-page="projet-bloc-notes">
   <div id="page-content" class="course-content">
-    <h1>Projet Débutant — Bloc-notes Desktop</h1>
+    <h1>Projet 2 — Bloc-notes multi-pages</h1>
     <div class="course-meta">
-      <span class="course-meta__badge course-meta__badge--level">Débutant</span>
-      <span class="course-meta__badge">⏱ 12h</span>
-      
+      <span class="course-meta__badge course-meta__badge--level">Intermédiaire</span>
+      <span class="course-meta__badge">⏱ 10h</span>
+      <span class="course-meta__badge">Prérequis : Chapitres 4 à 9</span>
     </div>
     
     <h2>Objectif</h2>
-    <p>Créer un bloc-notes Electron minimal : éditeur texte, sauvegarde fichier via IPC et dialog natif.</p>
+    <p>Éditeur texte avec 3 pages, IPC, menus Fichier, Ouvrir/Enregistrer.</p>
     <h2>Fonctionnalités</h2>
-    <ul><li>Zone de texte multiligne</li><li>Ouvrir / Enregistrer (dialog)</li><li>Raccourcis Ctrl+S</li><li>Menu Fichier natif</li></ul>
-    <h2>Stack</h2>
-    <p>Electron, preload + IPC, fs (Main), dialog</p>
-    <h2>Livrables</h2>
-    <p>Repo Git, README, capture d'écran, démo vidéo 2 min.</p>
+    <ul>
+      <li>pages/accueil.html, parametres.html, apropos.html</li>
+      <li>preload + IPC sauvegarde</li>
+      <li>Menu natif + dialog</li>
+      <li>Tests E2E du bouton Sauvegarder</li>
+    </ul>
   </div>
   <script src="../assets/js/navigation.js"></script>
   <script src="../assets/js/layout.js"></script>

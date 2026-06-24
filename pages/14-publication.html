@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 14 — Publier & mises à jour automatiques — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="14-publication">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 14 — Publier & mises à jour automatiques</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Avancé</span>
+      <span class="course-meta__badge">⏱ 4h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 13</span>
+    </div>
+    
+    <h2>1. Publier sur GitHub Releases</h2>
+    <pre><code>npm install electron-updater --save
+
+// main.js
+const { autoUpdater } = require('electron-updater');
+app.whenReady().then(() => autoUpdater.checkForUpdatesAndNotify());</code></pre>
+
+    <h2>2. CI/CD simplifié (GitHub Actions)</h2>
+    <pre><code># .github/workflows/build.yml
+name: Build
+on:
+  push:
+    tags: ['v*']
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: npm test
+      - run: npm run dist
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*</code></pre>
+
+    <h2>3. Checklist publication</h2>
+    <ul>
+      <li>✅ Tests passent</li>
+      <li>✅ Version incrémentée dans package.json</li>
+      <li>✅ Icônes présentes</li>
+      <li>✅ README avec captures d'écran</li>
+      <li>✅ Tag Git <code>v1.0.0</code> → build automatique</li>
+    </ul>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

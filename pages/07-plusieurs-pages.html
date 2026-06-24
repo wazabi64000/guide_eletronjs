@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 7 — Plusieurs pages dans l'application — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="07-plusieurs-pages">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 7 — Plusieurs pages dans l'application</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Intermédiaire</span>
+      <span class="course-meta__badge">⏱ 6h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 6</span>
+    </div>
+    
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Gérer plusieurs fichiers HTML (accueil, paramètres, à propos)</li>
+      <li>Naviguer entre les pages</li>
+      <li>Option : plusieurs fenêtres</li>
+    </ul>
+
+    <h2>2. Structure multi-pages</h2>
+    <div class="ascii-diagram">mon-app-electron/
+├── main.js
+├── preload.js
+├── pages/
+│   ├── accueil.html
+│   ├── parametres.html
+│   └── apropos.html
+├── css/style.css
+└── js/navigation.js</div>
+
+    <h2>3. Navigation simple (méthode débutant)</h2>
+  <pre><code>// js/navigation.js (Renderer)
+function allerVers(page) {
+  window.location.href = `pages/${page}.html`;
+}</code></pre>
+    <pre><code>&lt;!-- pages/accueil.html --&gt;
+&lt;nav&gt;
+  &lt;button onclick="allerVers('parametres')"&gt;Paramètres&lt;/button&gt;
+  &lt;button onclick="allerVers('apropos')"&gt;À propos&lt;/button&gt;
+&lt;/nav&gt;</code></pre>
+
+    <h2>4. Charger une autre page depuis main.js</h2>
+    <pre><code>win.loadFile(path.join(__dirname, 'pages', 'accueil.html'));</code></pre>
+
+    <h2>5. Plusieurs fenêtres (option)</h2>
+    <pre><code>function ouvrirParametres() {
+  const win = new BrowserWindow({ width: 500, height: 400, parent: mainWindow });
+  win.loadFile('pages/parametres.html');
+}</code></pre>
+
+    <h2>6. Exercice</h2>
+    <p>Créez 3 pages : Accueil, Paramètres (choix thème clair/sombre), À propos (version app).</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

@@ -3,103 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chapitre 0 — Introduction à Electron.js — wazabiCode Electron</title>
+  <title>Chapitre 0 — Qu'est-ce qu'Electron ? — wazabiCode</title>
   <link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body data-page="00-introduction">
   <div id="page-content" class="course-content">
-    <h1>Chapitre 0 — Introduction à Electron.js</h1>
+    <h1>Chapitre 0 — Qu'est-ce qu'Electron ?</h1>
     <div class="course-meta">
       <span class="course-meta__badge course-meta__badge--level">Débutant</span>
-      <span class="course-meta__badge">⏱ 4h</span>
-      <span class="course-meta__badge">Prérequis : Bases HTML, CSS, JavaScript</span>
+      <span class="course-meta__badge">⏱ 2h</span>
+      <span class="course-meta__badge">Prérequis : HTML & JS de base</span>
     </div>
     
-    <h2>1. Objectifs pédagogiques</h2>
-    <ul>
-      <li>Comprendre ce qu'est Electron et pourquoi l'utiliser</li>
-      <li>Distinguer application Web et application Desktop</li>
-      <li>Maîtriser l'architecture Main Process / Renderer / Preload</li>
-      <li>Comparer Electron avec Tauri, Flutter et Neutralino</li>
-      <li>Savoir quand choisir Electron pour un projet</li>
-    </ul>
-
-    <h2>2. Théorie — Qu'est-ce qu'Electron ?</h2>
-    <p><strong>Electron</strong> est un framework open source (GitHub, 2013) qui permet de créer des applications Desktop avec les technologies Web. Il embarque <strong>Chromium</strong> (moteur de rendu) et <strong>Node.js</strong> (accès système) dans un seul exécutable.</p>
-    <p>Applications célèbres : VS Code, Slack, Discord, Notion Desktop, Obsidian, Figma Desktop.</p>
-
-    <div class="ascii-diagram">┌─────────────────────────────────────────────────────────────────┐
-│                    APPLICATION ELECTRON                          │
-│  ┌──────────────────────┐    ┌──────────────────────────────┐   │
-│  │    MAIN PROCESS      │    │     RENDERER PROCESS(ES)     │   │
-│  │    (Node.js)         │◀──▶│     (Chromium)               │   │
-│  │  • app, BrowserWindow│ IPC│  • Votre HTML/CSS/JS (UI)    │   │
-│  │  • ipcMain, fs, sql  │    │  • Pas de Node.js direct     │   │
-│  └──────────────────────┘    └──────────────────────────────┘   │
-│              └────────── PRELOAD (contextBridge) ──────────┘    │
-└─────────────────────────────────────────────────────────────────┘</div>
-
-    <h3>Main Process</h3>
-    <p>Point d'entrée <code>main.js</code>. Un seul par app. Gère fenêtres, menus, cycle de vie, accès fichiers et base de données.</p>
-
-    <h3>Renderer Process</h3>
-    <p>Un par fenêtre. Affiche votre interface HTML/CSS/JS. Communique avec le Main via IPC uniquement.</p>
-
-    <h3>Preload Script</h3>
-    <p>Pont sécurisé exécuté avant la page. Expose une API limitée via <code>contextBridge.exposeInMainWorld()</code>.</p>
-
-    <h2>3. Web vs Desktop</h2>
-    <table>
-      <tr><th>Web</th><th>Desktop Electron</th></tr>
-      <tr><td>Navigateur requis</td><td>Installateur .exe / .dmg / .AppImage</td></tr>
-      <tr><td>Sandbox navigateur</td><td>Accès fichiers, SQLite, notifications OS</td></tr>
-      <tr><td>Mise à jour serveur</td><td>electron-updater</td></tr>
-    </table>
-
-    <h2>4. Comparaisons</h2>
-    <table>
-      <tr><th>Critère</th><th>Electron</th><th>Tauri</th><th>Flutter</th></tr>
-      <tr><td>UI</td><td>HTML/CSS/JS</td><td>WebView native</td><td>Dart/widgets</td></tr>
-      <tr><td>Taille</td><td>~150 Mo+</td><td>~5–15 Mo</td><td>~30 Mo</td></tr>
-      <tr><td>Backend</td><td>Node.js</td><td>Rust</td><td>Dart</td></tr>
-      <tr><td>Écosystème npm</td><td>Complet</td><td>Partiel</td><td>Pub.dev</td></tr>
-    </table>
-
-    <h2>5. Exemple simple</h2>
-    <pre><code>// main.js
-import { app, BrowserWindow } from 'electron';
-import path from 'node:path';
-
-const createWindow = () => {
-  const win = new BrowserWindow({
-    width: 900, height: 600,
-    webPreferences: {
-      preload: path.join(import.meta.dirname, 'preload.js'),
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  });
-  win.loadFile('index.html');
-};
-app.whenReady().then(createWindow);</code></pre>
-
-    <h2>6. Exercices</h2>
-    <div class="quiz-block"><h4>Exercice 1</h4><p>Listez 3 apps Electron que vous utilisez et identifiez leur cas d'usage Desktop.</p></div>
-
-    <h2>7. Quiz</h2>
-    <div class="quiz-block"><h4>Q1. Electron combine ?</h4>
-      <label class="quiz-option"><input type="radio" name="q1" checked> Chromium + Node.js ✓</label>
-      <label class="quiz-option"><input type="radio" name="q1"> Firefox + Python</label>
+    <div class="alert alert--info">
+      Référence : <a href="https://www.electronjs.org/fr/docs/latest/" target="_blank" rel="noopener">Documentation officielle Electron</a>
     </div>
-
-    <h2>8. Bonnes pratiques</h2>
-    <ul><li><code>contextIsolation: true</code> toujours</li><li><code>nodeIntegration: false</code> dans le renderer</li><li>Logique système dans le Main, UI dans le Renderer</li></ul>
-
-    <h2>9. Erreurs fréquentes</h2>
-    <div class="alert alert--warning"><strong>nodeIntegration: true</strong> → failles XSS. Utilisez Preload.</div>
-
-    <h2>10. Challenge</h2>
-    <p>Rédigez un ADR (Architecture Decision Record) justifiant Electron pour une app de gestion de factures offline.</p>
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Comprendre ce qu'est une application Desktop Electron</li>
+      <li>Savoir ce que vous allez construire dans ce cours</li>
+      <li>Connaître les prérequis minimaux</li>
+    </ul>
+    <h2>2. Electron en une phrase</h2>
+    <p><strong>Electron</strong> permet de créer une application installable (Windows, macOS, Linux) avec du <strong>HTML, CSS et JavaScript</strong>, comme un site web, mais dans sa propre fenêtre.</p>
+    <p>Exemples : Visual Studio Code, Discord, Slack, Obsidian.</p>
+    <h2>3. Les 3 fichiers minimum</h2>
+    <div class="ascii-diagram">mon-app/
+├── package.json    ← configuration npm
+├── main.js         ← démarre l'app (Node.js)
+└── index.html      ← votre première page (interface)</div>
+    <h2>4. Ce que vous allez apprendre</h2>
+    <ol>
+      <li>Installer Electron avec <code>npm install electron --save-dev</code></li>
+      <li>Créer votre première page HTML affichée dans une fenêtre</li>
+      <li>Comprendre Main Process / Renderer Process</li>
+      <li>Ajouter plusieurs pages, menus, sauvegarde de fichiers</li>
+      <li>Tester votre application</li>
+      <li>Compiler en <strong>.exe</strong> (Windows), <strong>.dmg</strong> (macOS), <strong>.AppImage</strong> (Linux)</li>
+    </ol>
+    <h2>5. Prérequis</h2>
+    <ul>
+      <li>Savoir écrire un fichier <code>index.html</code> basique</li>
+      <li>Connaître <code>console.log()</code> en JavaScript</li>
+      <li>Avoir Node.js installé (nous le vérifions au chapitre 1)</li>
+    </ul>
+    <h2>6. Quiz</h2>
+    <div class="quiz-block"><h4>Q1. Electron sert à créer…</h4>
+      <label class="quiz-option"><input type="radio" checked> Des applications Desktop ✓</label>
+      <label class="quiz-option"><input type="radio"> Des sites WordPress</label>
+    </div>
   </div>
   <script src="../assets/js/navigation.js"></script>
   <script src="../assets/js/layout.js"></script>

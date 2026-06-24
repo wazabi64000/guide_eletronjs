@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 5 — Script Preload & contextBridge — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="05-preload">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 5 — Script Preload & contextBridge</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Débutant</span>
+      <span class="course-meta__badge">⏱ 5h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 4</span>
+    </div>
+    
+    <div class="alert alert--info">
+      📚 <a href="https://www.electronjs.org/fr/docs/latest/tutorial/tutorial-preload" target="_blank" rel="noopener">Preload scripts — Electron</a>
+    </div>
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Créer <code>preload.js</code></li>
+      <li>Exposer une API sécurisée au Renderer via <code>contextBridge</code></li>
+    </ul>
+
+    <h2>2. preload.js</h2>
+    <pre><code>// preload.js — Pont entre Main et Renderer
+const { contextBridge } = require('electron');
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  platform: process.platform,
+  versions: {
+    electron: process.versions.electron,
+    chrome: process.versions.chrome,
+    node: process.versions.node,
+  },
+});</code></pre>
+
+    <h2>3. Configurer main.js</h2>
+    <pre><code>const win = new BrowserWindow({
+  webPreferences: {
+    preload: path.join(__dirname, 'preload.js'),
+    contextIsolation: true,    // Obligatoire (sécurité)
+    nodeIntegration: false,    // Obligatoire (sécurité)
+  },
+});</code></pre>
+
+    <h2>4. Utiliser dans index.html</h2>
+    <pre><code>&lt;script&gt;
+  document.body.innerHTML += `&lt;p&gt;Electron ${window.electronAPI.versions.electron}&lt;/p&gt;`;
+&lt;/script&gt;</code></pre>
+
+    <h2>5. Exercice</h2>
+    <p>Affichez la plateforme (<code>win32</code>, <code>linux</code>, <code>darwin</code>) dans votre page.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

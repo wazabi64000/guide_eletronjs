@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 6 — Communication IPC — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="06-ipc">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 6 — Communication IPC</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Débutant</span>
+      <span class="course-meta__badge">⏱ 6h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 5</span>
+    </div>
+    
+    <div class="alert alert--info">
+      📚 <a href="https://www.electronjs.org/fr/docs/latest/tutorial/ipc" target="_blank" rel="noopener">Inter-Process Communication — Electron</a>
+    </div>
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Envoyer un message du Renderer vers le Main</li>
+      <li>Recevoir une réponse avec <code>invoke</code> / <code>handle</code></li>
+    </ul>
+
+    <h2>2. preload.js</h2>
+    <pre><code>const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld('api', {
+  sauvegarder: (texte) => ipcRenderer.invoke('save-text', texte),
+  lire: () => ipcRenderer.invoke('read-text'),
+});</code></pre>
+
+    <h2>3. main.js</h2>
+    <pre><code>const { ipcMain } = require('electron');
+const fs = require('fs');
+const path = require('path');
+
+const fichier = path.join(app.getPath('userData'), 'notes.txt');
+
+ipcMain.handle('save-text', (_event, texte) => {
+  fs.writeFileSync(fichier, texte, 'utf-8');
+  return { ok: true };
+});
+
+ipcMain.handle('read-text', () => {
+  if (fs.existsSync(fichier)) return fs.readFileSync(fichier, 'utf-8');
+  return '';
+});</code></pre>
+
+    <h2>4. index.html</h2>
+    <pre><code>&lt;textarea id="editor"&gt;&lt;/textarea&gt;
+&lt;button id="save"&gt;Sauvegarder&lt;/button&gt;
+&lt;script&gt;
+  const editor = document.getElementById('editor');
+  window.api.lire().then(t => editor.value = t);
+  document.getElementById('save').onclick = () =>
+    window.api.sauvegarder(editor.value);
+&lt;/script&gt;</code></pre>
+
+    <h2>5. Schéma IPC</h2>
+    <div class="ascii-diagram">Renderer  →  window.api.save()  →  preload  →  ipcRenderer.invoke
+  →  Main ipcMain.handle  →  fs.writeFile  →  retour { ok: true }</div>
+
+    <h2>6. Challenge</h2>
+    <p>Bloc-notes minimal fonctionnel avec sauvegarde automatique au clic.</p>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapitre 4 — Main Process & Renderer Process — wazabiCode</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body data-page="04-processus">
+  <div id="page-content" class="course-content">
+    <h1>Chapitre 4 — Main Process & Renderer Process</h1>
+    <div class="course-meta">
+      <span class="course-meta__badge course-meta__badge--level">Débutant</span>
+      <span class="course-meta__badge">⏱ 4h</span>
+      <span class="course-meta__badge">Prérequis : Chapitre 3</span>
+    </div>
+    
+    <div class="alert alert--info">
+      📚 <a href="https://www.electronjs.org/fr/docs/latest/tutorial/process-model" target="_blank" rel="noopener">Modèle de processus — Electron</a>
+    </div>
+    <h2>1. Objectifs</h2>
+    <ul>
+      <li>Comprendre la différence Main / Renderer</li>
+      <li>Savoir quel code va où</li>
+    </ul>
+
+    <h2>2. Schéma officiel</h2>
+    <div class="ascii-diagram">┌──────────────── MAIN PROCESS ────────────────┐
+│  main.js — Node.js complet                    │
+│  • Crée les fenêtres                          │
+│  • Accès fichiers, base de données            │
+│  • Un seul Main Process par application       │
+└───────────────────────┬───────────────────────┘
+                        │ crée
+                        ▼
+┌──────────────── RENDERER PROCESS ──────────────┐
+│  index.html + JavaScript — comme dans Chrome  │
+│  • Affiche l'interface utilisateur            │
+│  • Un Renderer par fenêtre / onglet           │
+│  • PAS d'accès Node.js direct (sécurité)      │
+└──────────────────────────────────────────────┘</div>
+
+    <h2>3. Où mettre mon code ?</h2>
+    <table>
+      <tr><th>Besoin</th><th>Fichier</th><th>Processus</th></tr>
+      <tr><td>Créer une fenêtre</td><td>main.js</td><td>Main</td></tr>
+      <tr><td>Style CSS, boutons</td><td>index.html</td><td>Renderer</td></tr>
+      <tr><td>Lire un fichier disque</td><td>main.js</td><td>Main</td></tr>
+      <tr><td>Réagir au clic utilisateur</td><td>renderer.js ou &lt;script&gt;</td><td>Renderer</td></tr>
+    </table>
+
+    <h2>4. Exercice</h2>
+    <p>Ajoutez dans <code>index.html</code> un script qui affiche <code>navigator.userAgent</code> — observez que c'est Chromium.</p>
+
+    <h2>5. Quiz</h2>
+    <div class="quiz-block"><h4>main.js s'exécute dans…</h4>
+      <label class="quiz-option"><input type="radio" checked> Le Main Process (Node.js) ✓</label>
+      <label class="quiz-option"><input type="radio"> Le Renderer (navigateur)</label>
+    </div>
+  </div>
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>
