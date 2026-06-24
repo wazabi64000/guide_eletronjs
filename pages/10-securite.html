@@ -30,6 +30,14 @@
     <h2>2. Content Security Policy</h2>
     <pre><code>&lt;meta http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"&gt;</code></pre>
+    
+    <h3 class="explain-title">Explication — Content Security Policy</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>http-equiv="Content-Security-Policy"</code></td><td>En-tête de sécurité : limite ce que la page peut charger.</td></tr>
+      <tr><td><code>default-src 'self'</code></td><td>Par défaut, seules les ressources du même dossier sont autorisées.</td></tr>
+      <tr><td><code>script-src 'self'</code></td><td>Les scripts ne peuvent venir que de votre app — pas de CDN externe non contrôlé.</td></tr>
+    </table>
 
     <h2>3. Ne jamais faire</h2>
     <div class="alert alert--warning">

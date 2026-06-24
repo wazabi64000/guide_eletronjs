@@ -23,6 +23,13 @@
 
     <h2>2. Installation</h2>
     <pre><code>npm install electron-builder --save-dev</code></pre>
+    
+    <h3 class="explain-title">Explication — installation electron-builder</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>npm install electron-builder --save-dev</code></td><td>Télécharge l'outil qui compile votre app en installateur.</td></tr>
+      <tr><td><code>--save-dev</code></td><td>Outil de build uniquement — pas nécessaire chez l'utilisateur final.</td></tr>
+    </table>
 
     <h2>3. package.json</h2>
     <pre><code>{
@@ -58,6 +65,18 @@
     }
   }
 }</code></pre>
+    
+    <h3 class="explain-title">Explication — package.json (electron-builder)</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>"dist": "electron-builder"</code></td><td>Script npm qui compile l'app en installateur (.exe, .dmg, .AppImage).</td></tr>
+      <tr><td><code>"build".appId</code></td><td>Identifiant unique de l'app (ex : style nom de domaine inversé).</td></tr>
+      <tr><td><code>productName</code></td><td>Nom affiché à l'utilisateur dans le menu et l'installateur.</td></tr>
+      <tr><td><code>directories.output: "dist"</code></td><td>Dossier où les installateurs compilés seront créés.</td></tr>
+      <tr><td><code>win.target: "nsis"</code></td><td>Windows : installateur classique .exe avec assistant.</td></tr>
+      <tr><td><code>mac.target: "dmg"</code></td><td>macOS : image disque .dmg.</td></tr>
+      <tr><td><code>linux.target: "AppImage"</code></td><td>Linux : fichier unique exécutable sans installation.</td></tr>
+    </table>
 
     <h2>4. Workflow recommandé</h2>
     <div class="ascii-diagram">1. npm test          ← tests passent
@@ -70,6 +89,15 @@
 npm run dist:win     # Windows (depuis n'importe quel OS avec Wine si Linux)
 npm run dist:mac     # macOS (nécessite un Mac pour signer)
 npm run dist:linux   # Linux AppImage</code></pre>
+    
+    <h3 class="explain-title">Explication — commandes de compilation</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>npm run dist</code></td><td>Compile pour l'OS sur lequel vous travaillez (Windows, macOS ou Linux).</td></tr>
+      <tr><td><code>npm run dist:win</code></td><td>Force la génération d'un installateur Windows (.exe).</td></tr>
+      <tr><td><code>npm run dist:mac</code></td><td>Force un .dmg — signature Apple requiert souvent un Mac.</td></tr>
+      <tr><td><code>npm run dist:linux</code></td><td>Force un fichier .AppImage exécutable sur Linux.</td></tr>
+    </table>
 
     <h2>6. Résultat dans dist/</h2>
     <table>

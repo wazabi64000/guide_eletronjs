@@ -27,12 +27,35 @@ export function formaterTitre(t) { return t.trim() || 'Sans titre'; }
 // utils/format.test.js
 import { formaterTitre } from './format.js';
 test('titre vide', () => expect(formaterTitre('')).toBe('Sans titre'));</code></pre>
+    
+    <h3 class="explain-title">Explication — test unitaire Jest</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>export function formaterTitre</code></td><td>Fonction pure testée — pas besoin d'Electron pour la tester.</td></tr>
+      <tr><td><code>import { formaterTitre } from …</code></td><td>Import ESM du fichier à tester.</td></tr>
+      <tr><td><code>test('titre vide', …)</code></td><td>Définit un cas de test nommé « titre vide ».</td></tr>
+      <tr><td><code>expect(…).toBe(…)</code></td><td>Vérifie que le résultat est exactement égal à la valeur attendue.</td></tr>
+    </table>
     <pre><code>// package.json
 "scripts": { "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js" }</code></pre>
+    
+    <h3 class="explain-title">Explication — script test Jest ESM</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>--experimental-vm-modules</code></td><td>Indispensable pour que Jest comprenne les <code>import</code> ESM.</td></tr>
+      <tr><td><code>node_modules/jest/bin/jest.js</code></td><td>Lance Jest sans installation globale.</td></tr>
+    </table>
 
     <h2>3. Tests E2E — Playwright</h2>
     <pre><code>npm install @playwright/test --save-dev
 npx playwright install</code></pre>
+    
+    <h3 class="explain-title">Explication — installer Playwright</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>npm install @playwright/test --save-dev</code></td><td>Ajoute Playwright comme outil de test dans le projet.</td></tr>
+      <tr><td><code>npx playwright install</code></td><td>Télécharge les navigateurs/Chromium nécessaires aux tests E2E.</td></tr>
+    </table>
     <pre><code>// tests/electron.spec.js (ESM)
 import { test, expect, _electron as electron } from '@playwright/test';
 
@@ -44,10 +67,28 @@ test('fenêtre principale', async () => {
   await expect(window.locator('#message')).not.toBeEmpty();
   await app.close();
 });</code></pre>
+    
+    <h3 class="explain-title">Explication — test E2E Playwright</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>import { _electron as electron }</code></td><td>API Playwright pour lancer et contrôler une app Electron.</td></tr>
+      <tr><td><code>electron.launch({ args: ['.'] })</code></td><td>Démarre votre app comme en production.</td></tr>
+      <tr><td><code>app.firstWindow()</code></td><td>Récupère la première fenêtre ouverte.</td></tr>
+      <tr><td><code>expect(window).toHaveTitle(…)</code></td><td>Vérifie que le titre de la fenêtre correspond.</td></tr>
+      <tr><td><code>window.click('#btn')</code></td><td>Simule un clic sur le bouton — comme un utilisateur réel.</td></tr>
+      <tr><td><code>app.close()</code></td><td>Ferme l'application à la fin du test.</td></tr>
+    </table>
 
     <h2>4. Lancer les tests</h2>
     <pre><code>npm test
 npx playwright test</code></pre>
+    
+    <h3 class="explain-title">Explication — lancer les tests</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>npm test</code></td><td>Exécute Jest — tests unitaires rapides sur vos fonctions JavaScript.</td></tr>
+      <tr><td><code>npx playwright test</code></td><td>Lance les tests E2E — démarre Electron et simule un utilisateur.</td></tr>
+    </table>
 
     <h2>5. Challenge</h2>
     <p>Écrivez 3 tests unitaires + 1 test E2E qui vérifie le bouton de votre page d'accueil.</p>

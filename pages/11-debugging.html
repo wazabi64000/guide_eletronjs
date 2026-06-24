@@ -17,6 +17,13 @@
     
     <h2>1. Renderer — DevTools</h2>
     <pre><code>mainWindow.webContents.openDevTools(); // mode dev uniquement</code></pre>
+    
+    <h3 class="explain-title">Explication — DevTools</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>mainWindow.webContents</code></td><td>Référence au contenu web de la fenêtre principale.</td></tr>
+      <tr><td><code>.openDevTools()</code></td><td>Ouvre les outils de développement Chrome (inspecteur, console, réseau).</td></tr>
+    </table>
 
     <h2>2. Main Process — VS Code</h2>
     <pre><code>// .vscode/launch.json
@@ -32,12 +39,28 @@
     "outputCapture": "std"
   }]
 }</code></pre>
+    
+    <h3 class="explain-title">Explication — launch.json</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>"type": "node"</code></td><td>Débogueur Node.js intégré à VS Code.</td></tr>
+      <tr><td><code>runtimeExecutable: …/electron</code></td><td>Lance Electron au lieu de Node.js seul.</td></tr>
+      <tr><td><code>"args": ["."]</code></td><td>Passe le dossier courant à Electron (équivalent de <code>electron .</code>).</td></tr>
+      <tr><td><code>outputCapture: "std"</code></td><td>Affiche les <code>console.log</code> du Main dans le terminal VS Code.</td></tr>
+    </table>
 
     <h2>3. Logs (ESM)</h2>
     <pre><code>npm install electron-log --save
 // main.js
 import log from 'electron-log';
 log.info('Application démarrée');</code></pre>
+    
+    <h3 class="explain-title">Explication — electron-log</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>import log from 'electron-log'</code></td><td>Module pour écrire des logs dans un fichier et la console.</td></tr>
+      <tr><td><code>log.info(…)</code></td><td>Message d'information — utile pour tracer le démarrage ou les erreurs.</td></tr>
+    </table>
   </div>
   <script src="../assets/js/navigation.js"></script>
   <script src="../assets/js/layout.js"></script>

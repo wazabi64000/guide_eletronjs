@@ -52,6 +52,15 @@
       <strong>Main & Preload</strong> = ESM (<code>import</code>) grâce à <code>"type": "module"</code> dans package.json.<br>
       <strong>Renderer</strong> = JavaScript navigateur (peut utiliser <code>&lt;script type="module"&gt;</code>).
     </div>
+    
+    <h3 class="explain-title">Explication — où écrire votre code ?</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>main.js + import ESM</code></td><td>Main Process : fenêtres, fichiers, menus, IPC — accès Node.js complet.</td></tr>
+      <tr><td><code>index.html + &lt;script&gt;</code></td><td>Renderer : interface visible — comme du JavaScript dans Chrome.</td></tr>
+      <tr><td><code>preload.js + import ESM</code></td><td>Pont sécurisé exécuté avant la page — expose <code>window.api</code>.</td></tr>
+      <tr><td><code>renderer.js + type="module"</code></td><td>JavaScript modulaire côté page — <code>import</code> entre fichiers UI.</td></tr>
+    </table>
 
     <h2>4. Exercice</h2>
     <p>Ajoutez dans <code>index.html</code> un script qui affiche <code>navigator.userAgent</code> — observez que c'est Chromium.</p>

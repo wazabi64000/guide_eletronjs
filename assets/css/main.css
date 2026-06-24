@@ -360,6 +360,50 @@ body {
   background: rgba(255, 255, 255, 0.02);
 }
 
+/* Blocs d'explication pédagogique (après chaque exemple de code) */
+.explain-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin: 0.5rem 0 0.75rem;
+}
+
+.explain-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.5rem;
+  font-size: 0.88rem;
+}
+
+.explain-table th,
+.explain-table td {
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.explain-table th {
+  background: var(--color-surface-2);
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.explain-table td:first-child {
+  width: 38%;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  background: rgba(34, 211, 238, 0.04);
+}
+
+.explain-table tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.explain-table tr:nth-child(even) td:first-child {
+  background: rgba(34, 211, 238, 0.06);
+}
+
 /* Code */
 .course-content pre {
   background: #0d1117;

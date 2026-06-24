@@ -41,6 +41,18 @@
     "electron": "^42.5.0"
   }
 }</code></pre>
+    
+    <h3 class="explain-title">Explication — package.json (champs importants)</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>"name"</code></td><td>Nom de votre projet. Utilisé par npm pour l'identifier.</td></tr>
+      <tr><td><code>"version"</code></td><td>Numéro de version de l'app (ex : 1.0.0 → 1.0.1 pour une mise à jour).</td></tr>
+      <tr><td><code>"type": "module"</code></td><td>Active les <strong>modules ESM</strong> : dans vos <code>.js</code>, vous écrivez <code>import</code> au lieu de <code>require()</code>.</td></tr>
+      <tr><td><code>"main": "main.js"</code></td><td>Fichier que Electron exécute en premier au lancement — le <strong>Main Process</strong>.</td></tr>
+      <tr><td><code>"scripts".start</code></td><td>Définit la commande <code>npm start</code> → lance <code>electron .</code> (le point = dossier courant).</td></tr>
+      <tr><td><code>devDependencies</code></td><td>Dépendances pour le <em>développement</em> seulement (pas livrées telles quelles à l'utilisateur).</td></tr>
+      <tr><td><code>"electron"</code></td><td>Le package Electron : contient Chromium + Node.js embarqués pour votre app Desktop.</td></tr>
+    </table>
     <p>Tous les <code>.js</code> du Main et Preload utilisent <code>import</code> / <code>export</code>.</p>
     <h2>Livrable</h2>
     <p>Dossier <code>dist/</code> avec l'installateur + capture d'écran.</p>

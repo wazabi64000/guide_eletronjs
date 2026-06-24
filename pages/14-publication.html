@@ -22,6 +22,20 @@
 import { autoUpdater } from 'electron-updater';
 import { app } from 'electron';
 app.whenReady().then(() => autoUpdater.checkForUpdatesAndNotify());</code></pre>
+    
+    <h3 class="explain-title">Explication — mise à jour automatique</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>import { autoUpdater } from 'electron-updater'</code></td><td>Module pour vérifier et télécharger les nouvelles versions.</td></tr>
+      <tr><td><code>checkForUpdatesAndNotify()</code></td><td>Contacte le serveur de releases ; notifie l'utilisateur si une MAJ existe.</td></tr>
+    </table>
+    
+    <h3 class="explain-title">Explication — app.whenReady ici</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>app.whenReady().then(…)</code></td><td>Attend qu'Electron soit prêt avant de chercher une mise à jour.</td></tr>
+      <tr><td><code>On enchaîne après le démarrage</code></td><td>La vérification MAJ ne bloque pas l'affichage de la fenêtre.</td></tr>
+    </table>
 
     <h2>2. CI/CD simplifié (GitHub Actions)</h2>
     <pre><code># .github/workflows/build.yml
@@ -45,6 +59,16 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: dist/*</code></pre>
+    
+    <h3 class="explain-title">Explication — workflow GitHub Actions</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>on.push.tags: ['v*']</code></td><td>Déclenche le build quand vous poussez un tag Git (ex : v1.0.0).</td></tr>
+      <tr><td><code>matrix.os</code></td><td>Compile sur Linux, Windows et macOS en parallèle.</td></tr>
+      <tr><td><code>npm ci</code></td><td>Installe les dépendances exactement comme le lockfile.</td></tr>
+      <tr><td><code>npm run dist</code></td><td>Produit les installateurs pour chaque OS.</td></tr>
+      <tr><td><code>action-gh-release</code></td><td>Publie les fichiers compilés sur GitHub Releases.</td></tr>
+    </table>
 
     <h2>3. Checklist publication</h2>
     <ul>

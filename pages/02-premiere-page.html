@@ -62,6 +62,24 @@
   &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+    
+    <h3 class="explain-title">Explication — index.html ligne par ligne</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>Indique au navigateur que c'est un document HTML5.</td></tr>
+      <tr><td><code>&lt;html lang="fr"&gt;</code></td><td>Racine de la page ; <code>lang="fr"</code> = français (accessibilité, SEO).</td></tr>
+      <tr><td><code>&lt;head&gt;</code></td><td>Métadonnées invisibles : titre onglet, encodage, styles.</td></tr>
+      <tr><td><code>&lt;meta charset="UTF-8"&gt;</code></td><td>Encodage des caractères — accents et emojis affichés correctement.</td></tr>
+      <tr><td><code>&lt;title&gt;</code></td><td>Texte affiché dans la barre de titre de la fenêtre Electron.</td></tr>
+      <tr><td><code>&lt;style&gt;…&lt;/style&gt;</code></td><td>CSS intégré : couleurs, marges, style du bouton.</td></tr>
+      <tr><td><code>&lt;body&gt;</code></td><td>Contenu visible par l'utilisateur.</td></tr>
+      <tr><td><code>&lt;h1&gt;, &lt;p&gt;</code></td><td>Titre principal et paragraphe de bienvenue.</td></tr>
+      <tr><td><code>&lt;button id="btn"&gt;</code></td><td>Bouton cliquable ; <code>id</code> permet de le cibler en JavaScript.</td></tr>
+      <tr><td><code>&lt;script&gt;…&lt;/script&gt;</code></td><td>JavaScript exécuté dans le <strong>Renderer</strong> (comme dans Chrome).</td></tr>
+      <tr><td><code>getElementById</code></td><td>Sélectionne un élément HTML par son <code>id</code>.</td></tr>
+      <tr><td><code>addEventListener('click')</code></td><td>Exécute une fonction quand l'utilisateur clique.</td></tr>
+      <tr><td><code>textContent = …</code></td><td>Modifie le texte affiché dans l'élément <code>#message</code>.</td></tr>
+    </table>
 
     <h2>3. Tester dans le navigateur (optionnel)</h2>
     <p>Ouvrez <code>index.html</code> dans Chrome pour vérifier le rendu. Ce n'est <em>pas</em> encore Electron, mais utile pour déboguer le HTML/CSS.</p>

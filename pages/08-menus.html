@@ -36,6 +36,19 @@ const template = [
   },
 ];
 Menu.setApplicationMenu(Menu.buildFromTemplate(template));</code></pre>
+    
+    <h3 class="explain-title">Explication — menu natif</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>import { Menu } from 'electron'</code></td><td>API pour créer la barre de menu en haut de la fenêtre (Fichier, Édition…).</td></tr>
+      <tr><td><code>label: 'Fichier'</code></td><td>Nom du menu affiché dans la barre.</td></tr>
+      <tr><td><code>submenu: [ … ]</code></td><td>Liste des entrées sous ce menu.</td></tr>
+      <tr><td><code>accelerator: 'CmdOrCtrl+N'</code></td><td>Raccourci clavier : Ctrl+N (Windows/Linux) ou Cmd+N (macOS).</td></tr>
+      <tr><td><code>click: () => createWindow()</code></td><td>Fonction appelée quand l'utilisateur clique sur cette entrée.</td></tr>
+      <tr><td><code>{ role: 'quit' }</code></td><td>Entrée prédéfinie Electron pour quitter l'application.</td></tr>
+      <tr><td><code>Menu.buildFromTemplate(template)</code></td><td>Construit le menu à partir du tableau de configuration.</td></tr>
+      <tr><td><code>Menu.setApplicationMenu(…)</code></td><td>Applique ce menu à toute l'application.</td></tr>
+    </table>
 
     <h2>2. Boîte de dialogue (ESM)</h2>
     <pre><code>import { dialog } from 'electron';
@@ -45,6 +58,15 @@ const { response } = await dialog.showMessageBox({
   buttons: ['Oui', 'Non'],
   message: 'Enregistrer avant de quitter ?',
 });</code></pre>
+    
+    <h3 class="explain-title">Explication — boîte de dialogue</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>import { dialog } from 'electron'</code></td><td>API pour les fenêtres système : ouvrir, enregistrer, confirmer.</td></tr>
+      <tr><td><code>await dialog.showMessageBox({…})</code></td><td>Affiche une popup avec boutons — <code>await</code> attend le clic utilisateur.</td></tr>
+      <tr><td><code>type: 'question'</code></td><td>Style icône : point d'interrogation.</td></tr>
+      <tr><td><code>buttons: ['Oui', 'Non']</code></td><td>Boutons affichés ; l'index du clic est dans <code>response</code>.</td></tr>
+    </table>
 
     <h2>3. Exercice</h2>
     <p>Menu Fichier → Quitter avec confirmation si texte non sauvegardé.</p>

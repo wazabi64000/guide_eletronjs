@@ -36,6 +36,18 @@ ipcMain.handle('dialog:save', async (_e, contenu) => {
   fs.writeFileSync(filePath, contenu, 'utf-8');
   return true;
 });</code></pre>
+    
+    <h3 class="explain-title">Explication — ouvrir / enregistrer fichiers</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>dialog.showOpenDialog</code></td><td>Ouvre l'explorateur « Ouvrir un fichier » natif du système.</td></tr>
+      <tr><td><code>properties: ['openFile']</code></td><td>Mode sélection d'un fichier (pas un dossier).</td></tr>
+      <tr><td><code>filters: [{ extensions: ['txt'] }]</code></td><td>Limite les types visibles : fichiers .txt et .md.</td></tr>
+      <tr><td><code>canceled</code></td><td><code>true</code> si l'utilisateur a annulé — on ne fait rien.</td></tr>
+      <tr><td><code>filePaths[0]</code></td><td>Chemin complet du fichier choisi par l'utilisateur.</td></tr>
+      <tr><td><code>dialog.showSaveDialog</code></td><td>Ouvre la fenêtre « Enregistrer sous ».</td></tr>
+      <tr><td><code>filePath</code></td><td>Chemin où l'utilisateur veut sauvegarder.</td></tr>
+    </table>
 
     <h2>2. preload.js (ESM)</h2>
     <pre><code>import { contextBridge, ipcRenderer } from 'electron';
@@ -44,6 +56,13 @@ contextBridge.exposeInMainWorld('api', {
   ouvrir: () => ipcRenderer.invoke('dialog:open'),
   enregistrer: (c) => ipcRenderer.invoke('dialog:save', c),
 });</code></pre>
+    
+    <h3 class="explain-title">Explication — preload pour fichiers</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>ouvrir: () => ipcRenderer.invoke(…)</code></td><td>Expose <code>window.api.ouvrir()</code> — ouvre le dialogue système via le Main.</td></tr>
+      <tr><td><code>enregistrer: (c) => …</code></td><td>Passe le contenu <code>c</code> au Main pour la boîte « Enregistrer sous ».</td></tr>
+    </table>
 
     <h2>3. Challenge</h2>
     <p>Éditeur texte complet : Nouveau, Ouvrir, Enregistrer via menu + raccourcis clavier.</p>

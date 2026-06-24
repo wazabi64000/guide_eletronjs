@@ -31,6 +31,15 @@ contextBridge.exposeInMainWorld('api', {
   sauvegarder: (texte) => ipcRenderer.invoke('save-text', texte),
   lire: () => ipcRenderer.invoke('read-text'),
 });</code></pre>
+    
+    <h3 class="explain-title">Explication — preload.js (IPC)</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>import { ipcRenderer } from 'electron'</code></td><td>Module pour envoyer des messages du Renderer vers le Main Process.</td></tr>
+      <tr><td><code>ipcRenderer.invoke('save-text', texte)</code></td><td>Appelle le handler <code>save-text</code> dans <code>main.js</code> et attend la réponse.</td></tr>
+      <tr><td><code>sauvegarder: (texte) => …</code></td><td>Fonction exposée au HTML via <code>window.api.sauvegarder()</code>.</td></tr>
+      <tr><td><code>lire: () => …</code></td><td>Fonction exposée via <code>window.api.lire()</code> — retourne une Promise.</td></tr>
+    </table>
 
     <h2>3. main.js (ESM)</h2>
     <pre><code>import { app, ipcMain } from 'electron';
@@ -48,6 +57,19 @@ ipcMain.handle('read-text', () => {
   if (fs.existsSync(fichier)) return fs.readFileSync(fichier, 'utf-8');
   return '';
 });</code></pre>
+    
+    <h3 class="explain-title">Explication — main.js (handlers IPC)</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>import { ipcMain } from 'electron'</code></td><td>Module pour <em>recevoir</em> les messages envoyés par le Renderer.</td></tr>
+      <tr><td><code>import fs from 'node:fs'</code></td><td>Module Node.js natif pour lire/écrire des fichiers sur le disque.</td></tr>
+      <tr><td><code>app.getPath('userData')</code></td><td>Dossier système où l'app peut stocker des données (notes, config).</td></tr>
+      <tr><td><code>ipcMain.handle('save-text', …)</code></td><td>Enregistre un handler : quand le Renderer appelle <code>invoke('save-text')</code>, cette fonction s'exécute.</td></tr>
+      <tr><td><code>(_event, texte)</code></td><td><code>_event</code> = infos sur l'événement (souvent ignoré) ; <code>texte</code> = donnée envoyée par le Renderer.</td></tr>
+      <tr><td><code>fs.writeFileSync(…)</code></td><td>Écrit le texte dans le fichier — <code>Sync</code> = synchrone (bloque jusqu'à la fin).</td></tr>
+      <tr><td><code>return { ok: true }</code></td><td>Renvoie un objet au Renderer — récupérable avec <code>await window.api.sauvegarder()</code>.</td></tr>
+      <tr><td><code>fs.existsSync / readFileSync</code></td><td>Vérifie si le fichier existe, puis lit son contenu en UTF-8.</td></tr>
+    </table>
 
     <h2>4. index.html</h2>
     <pre><code>&lt;textarea id="editor"&gt;&lt;/textarea&gt;
@@ -58,6 +80,15 @@ ipcMain.handle('read-text', () => {
   document.getElementById('save').onclick = () =>
     window.api.sauvegarder(editor.value);
 &lt;/script&gt;</code></pre>
+    
+    <h3 class="explain-title">Explication — index.html (appel IPC)</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>&lt;textarea id="editor"&gt;</code></td><td>Zone de saisie multiligne pour le texte des notes.</td></tr>
+      <tr><td><code>window.api.lire()</code></td><td>Appelle le preload → Main → lit le fichier → remplit le textarea au chargement.</td></tr>
+      <tr><td><code>.then(t => editor.value = t)</code></td><td>Quand la lecture est terminée, place le texte dans le textarea.</td></tr>
+      <tr><td><code>window.api.sauvegarder(editor.value)</code></td><td>Envoie le contenu actuel au Main Process pour l'enregistrer.</td></tr>
+    </table>
 
     <h2>5. Schéma IPC</h2>
     <div class="ascii-diagram">Renderer  →  window.api.save()  →  preload  →  ipcRenderer.invoke

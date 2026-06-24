@@ -42,16 +42,40 @@ export function allerVers(page) {
 &lt;script type="module"&gt;
   import { allerVers } from '../js/navigation.js';
   document.getElementById('btn-params').onclick = () =&gt; allerVers('parametres');
-&lt;/script&gt;</code></pre>
+}</code></pre>
+    
+    <h3 class="explain-title">Explication — navigation ESM</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>export function allerVers</code></td><td>Exporte une fonction réutilisable — autre fichier peut l'<code>import</code>er.</td></tr>
+      <tr><td><code>window.location.href = …</code></td><td>Change l'URL affichée dans la fenêtre → charge une autre page HTML.</td></tr>
+      <tr><td><code>&lt;script type="module"&gt;</code></td><td>Indique que le script utilise <code>import</code> (modules ESM côté navigateur).</td></tr>
+      <tr><td><code>import { allerVers } from …</code></td><td>Importe la fonction depuis <code>navigation.js</code>.</td></tr>
+    </table>
 
     <h2>4. Charger une autre page depuis main.js</h2>
     <pre><code>win.loadFile(path.join(__dirname, 'pages', 'accueil.html'));</code></pre>
+    
+    <h3 class="explain-title">Explication — loadFile multi-pages</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>path.join(__dirname, 'pages', …)</code></td><td>Construit le chemin : dossier du projet + sous-dossier <code>pages/</code> + fichier HTML.</td></tr>
+      <tr><td><code>loadFile(…)</code></td><td>Charge cette page comme page d'accueil au démarrage de la fenêtre.</td></tr>
+    </table>
 
     <h2>5. Plusieurs fenêtres (option)</h2>
     <pre><code>function ouvrirParametres() {
   const win = new BrowserWindow({ width: 500, height: 400, parent: mainWindow });
   win.loadFile('pages/parametres.html');
 }</code></pre>
+    
+    <h3 class="explain-title">Explication — fenêtre secondaire</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>new BrowserWindow({ parent: mainWindow })</code></td><td>Crée une fenêtre « enfant » liée à la fenêtre principale.</td></tr>
+      <tr><td><code>width / height</code></td><td>Taille de la fenêtre secondaire (paramètres).</td></tr>
+      <tr><td><code>loadFile('pages/parametres.html')</code></td><td>Charge une page HTML différente dans cette nouvelle fenêtre.</td></tr>
+    </table>
 
     <h2>6. Exercice</h2>
     <p>Créez 3 pages : Accueil, Paramètres (choix thème clair/sombre), À propos (version app).</p>

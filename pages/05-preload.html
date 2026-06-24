@@ -36,6 +36,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
     node: process.versions.node,
   },
 });</code></pre>
+    
+    <h3 class="explain-title">Explication — preload.js</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>import { contextBridge } from 'electron'</code></td><td><code>contextBridge</code> = outil sécurisé pour exposer des données au Renderer.</td></tr>
+      <tr><td><code>exposeInMainWorld('electronAPI', …)</code></td><td>Crée <code>window.electronAPI</code> accessible dans votre HTML — comme une API globale contrôlée.</td></tr>
+      <tr><td><code>platform: process.platform</code></td><td>OS actuel : <code>linux</code>, <code>win32</code> ou <code>darwin</code> (macOS).</td></tr>
+      <tr><td><code>process.versions.electron</code></td><td>Version d'Electron utilisée — utile pour le débogage.</td></tr>
+    </table>
 
     <h2>3. Configurer main.js</h2>
     <pre><code>const win = new BrowserWindow({
@@ -45,11 +54,27 @@ contextBridge.exposeInMainWorld('electronAPI', {
     nodeIntegration: false,    // Obligatoire (sécurité)
   },
 });</code></pre>
+    
+    <h3 class="explain-title">Explication — webPreferences dans BrowserWindow</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>preload: path.join(…)</code></td><td>Chemin vers <code>preload.js</code> exécuté <em>avant</em> le chargement de la page.</td></tr>
+      <tr><td><code>contextIsolation: true</code></td><td>Isole le code de la page du preload — <strong>obligatoire</strong> pour la sécurité.</td></tr>
+      <tr><td><code>nodeIntegration: false</code></td><td>Interdit au HTML d'accéder directement à Node.js — évite les failles.</td></tr>
+    </table>
 
     <h2>4. Utiliser dans index.html</h2>
     <pre><code>&lt;script&gt;
   document.body.innerHTML += `&lt;p&gt;Electron ${window.electronAPI.versions.electron}&lt;/p&gt;`;
 &lt;/script&gt;</code></pre>
+    
+    <h3 class="explain-title">Explication — utilisation dans le Renderer</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>window.electronAPI</code></td><td>Objet créé par <code>contextBridge</code> dans preload — accessible comme une variable globale.</td></tr>
+      <tr><td><code>versions.electron</code></td><td>Lit la version Electron exposée par le preload — preuve que le pont fonctionne.</td></tr>
+      <tr><td><code>Template literal \`…\${}…\`</code></td><td>Chaîne JavaScript qui insère une variable dans le HTML.</td></tr>
+    </table>
 
     <h2>5. Exercice</h2>
     <p>Affichez la plateforme (<code>win32</code>, <code>linux</code>, <code>darwin</code>) dans votre page.</p>

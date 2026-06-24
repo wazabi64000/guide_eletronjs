@@ -49,16 +49,133 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });</code></pre>
+    
+    <h3 class="explain-title">Explication — main.js (version minimale)</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>import { app, BrowserWindow }</code></td><td>Importe le gestionnaire d'app et la classe pour créer des fenêtres.</td></tr>
+      <tr><td><code>import path / fileURLToPath</code></td><td>Construisent <code>__dirname</code> en ESM — dossier du projet.</td></tr>
+      <tr><td><code>function createWindow()</code></td><td>Regroupe la création de fenêtre — réutilisable si l'app se rouvre sur macOS.</td></tr>
+      <tr><td><code>new BrowserWindow({ width, height, title })</code></td><td>Crée une fenêtre native avec taille et titre définis.</td></tr>
+      <tr><td><code>win.loadFile(path.join(__dirname, 'index.html'))</code></td><td>Charge votre page HTML dans la fenêtre.</td></tr>
+      <tr><td><code>app.whenReady().then(createWindow)</code></td><td>Attend qu'Electron soit prêt, puis ouvre la fenêtre.</td></tr>
+      <tr><td><code>window-all-closed → app.quit()</code></td><td>Sur Windows/Linux, quitte l'app quand toutes les fenêtres sont fermées.</td></tr>
+      <tr><td><code>activate → createWindow()</code></td><td>Sur macOS, recrée une fenêtre si l'utilisateur clique sur l'icône du dock.</td></tr>
+    </table>
 
     <h2>3. Explication ligne par ligne</h2>
+    <p>Quand vous lancez <code>npm start</code>, Node.js exécute <code>main.js</code> dans le <strong>Main Process</strong>. Voici ce que fait chaque partie du fichier, dans l'ordre d'exécution.</p>
+
+    <div class="ascii-diagram">npm start
+   │
+   ▼
+Electron lit package.json → charge main.js (Main Process)
+   │
+   ▼
+Les import sont résolus
+   │
+   ▼
+app.whenReady() attend que Electron soit prêt
+   │
+   ▼
+createWindow() → new BrowserWindow() → loadFile(index.html)
+   │
+   ▼
+L'utilisateur voit la fenêtre avec votre page HTML</div>
+
+    <h3>Les imports (début du fichier)</h3>
     <table>
-      <tr><th>Ligne</th><th>Rôle</th></tr>
-      <tr><td><code>import … from 'electron'</code></td><td>Import ESM de l'API Electron (Main Process)</td></tr>
-      <tr><td><code>fileURLToPath(import.meta.url)</code></td><td>Équivalent ESM de <code>__dirname</code></td></tr>
-      <tr><td><code>BrowserWindow</code></td><td>Crée une fenêtre Chromium</td></tr>
-      <tr><td><code>win.loadFile()</code></td><td>Affiche <code>index.html</code></td></tr>
-      <tr><td><code>app.whenReady()</code></td><td>Attend l'initialisation d'Electron</td></tr>
+      <tr><th>Code</th><th>Explication détaillée</th></tr>
+      <tr>
+        <td><code>import { app, BrowserWindow } from 'electron'</code></td>
+        <td>
+          <strong><code>app</code></strong> — objet principal qui représente votre application Electron (cycle de vie : démarrage, fermeture).<br>
+          <strong><code>BrowserWindow</code></strong> — classe pour créer une fenêtre Desktop (avec Chromium intégré à l'intérieur).<br>
+          Les accolades <code>{ }</code> signifient qu'on importe seulement ces deux noms depuis le package <code>electron</code>.
+        </td>
+      </tr>
+      <tr>
+        <td><code>import path from 'node:path'</code></td>
+        <td>
+          Module <strong>Node.js</strong> pour manipuler les chemins de fichiers de façon cross-platform
+          (<code>C:\projets\</code> sur Windows, <code>/home/user/</code> sur Linux).<br>
+          On l'utilise pour construire le chemin vers <code>index.html</code> sans se tromper de slash.
+        </td>
+      </tr>
+      <tr>
+        <td><code>import { fileURLToPath } from 'node:url'</code></td>
+        <td>
+          En ESM, on n'a pas <code>__dirname</code> automatiquement (contrairement à l'ancien <code>require</code>).<br>
+          <code>import.meta.url</code> donne l'URL du fichier courant (ex : <code>file:///home/.../main.js</code>).<br>
+          <code>fileURLToPath()</code> convertit cette URL en chemin système lisible par <code>loadFile()</code>.
+        </td>
+      </tr>
+      <tr>
+        <td><code>const __dirname = path.dirname(...)</code></td>
+        <td>
+          <strong><code>__dirname</code></strong> = dossier où se trouve <code>main.js</code> (pas le fichier lui-même).<br>
+          Exemple : si <code>main.js</code> est dans <code>/home/user/mon-app-electron/</code>, alors <code>__dirname</code> pointe vers ce dossier.<br>
+          Indispensable pour charger <code>index.html</code> au bon endroit, peu importe d'où vous lancez <code>npm start</code>.
+        </td>
+      </tr>
     </table>
+
+    <h3>La fonction <code>createWindow()</code></h3>
+    <table>
+      <tr><th>Code</th><th>Explication détaillée</th></tr>
+      <tr>
+        <td><code>new BrowserWindow({ ... })</code></td>
+        <td>
+          Crée une <strong>nouvelle fenêtre</strong> native (barre de titre, boutons réduire/fermer).<br>
+          À l'intérieur, Electron embarque un Chromium invisible qui affichera votre HTML.<br>
+          <code>width</code> / <code>height</code> — taille en pixels.<br>
+          <code>title</code> — texte affiché dans la barre de titre de la fenêtre.
+        </td>
+      </tr>
+      <tr>
+        <td><code>win.loadFile(path.join(__dirname, 'index.html'))</code></td>
+        <td>
+          <strong><code>path.join(__dirname, 'index.html')</code></strong> — assemble le chemin complet vers votre page
+          (ex : <code>/home/user/mon-app-electron/index.html</code>).<br>
+          <strong><code>win.loadFile(...)</code></strong> — charge ce fichier HTML <em>dans</em> la fenêtre. C'est le moment où votre interface devient visible.<br>
+          Sans cette ligne : fenêtre vide ou blanche.
+        </td>
+      </tr>
+    </table>
+
+    <h3>Le cycle de vie de l'application</h3>
+    <table>
+      <tr><th>Code</th><th>Explication détaillée</th></tr>
+      <tr>
+        <td><code>app.whenReady().then(createWindow)</code></td>
+        <td>
+          Electron a besoin de quelques millisecondes pour s'initialiser (Chromium, modules internes).<br>
+          <strong>On ne peut pas</strong> créer une fenêtre avant la fin de cette initialisation.<br>
+          <code>whenReady()</code> retourne une Promise : dès qu'Electron est prêt, il appelle <code>createWindow()</code>.<br>
+          C'est la ligne qui <strong>déclenche l'affichage</strong> de votre app.
+        </td>
+      </tr>
+      <tr>
+        <td><code>app.on('window-all-closed', ...)</code></td>
+        <td>
+          Événement déclenché quand l'utilisateur <strong>ferme toutes les fenêtres</strong>.<br>
+          Sur <strong>Windows et Linux</strong> : on quitte l'application (<code>app.quit()</code>).<br>
+          Sur <strong>macOS</strong> : l'app reste souvent active dans le dock → on ne quitte pas automatiquement (<code>process.platform !== 'darwin'</code>).
+        </td>
+      </tr>
+      <tr>
+        <td><code>app.on('activate', ...)</code></td>
+        <td>
+          Spécifique <strong>macOS</strong> : quand l'utilisateur clique sur l'icône du dock et qu'aucune fenêtre n'est ouverte.<br>
+          On recrée une fenêtre pour que l'app ne paraisse pas « morte ». Bonne pratique officielle Electron.
+        </td>
+      </tr>
+    </table>
+
+    <div class="alert alert--success">
+      <strong>À retenir :</strong> <code>main.js</code> ne dessine rien à l'écran directement. Il <em>orchestre</em> :
+      attendre Electron → créer une fenêtre → y charger <code>index.html</code>. C'est le HTML qui contient l'interface visible.
+    </div>
 
     <h2>4. package.json final (vérifiez avant de lancer)</h2>
     <pre><code>{
@@ -75,6 +192,18 @@ app.on('activate', () => {
     "electron": "^42.5.0"
   }
 }</code></pre>
+    
+    <h3 class="explain-title">Explication — package.json (champs importants)</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>"name"</code></td><td>Nom de votre projet. Utilisé par npm pour l'identifier.</td></tr>
+      <tr><td><code>"version"</code></td><td>Numéro de version de l'app (ex : 1.0.0 → 1.0.1 pour une mise à jour).</td></tr>
+      <tr><td><code>"type": "module"</code></td><td>Active les <strong>modules ESM</strong> : dans vos <code>.js</code>, vous écrivez <code>import</code> au lieu de <code>require()</code>.</td></tr>
+      <tr><td><code>"main": "main.js"</code></td><td>Fichier que Electron exécute en premier au lancement — le <strong>Main Process</strong>.</td></tr>
+      <tr><td><code>"scripts".start</code></td><td>Définit la commande <code>npm start</code> → lance <code>electron .</code> (le point = dossier courant).</td></tr>
+      <tr><td><code>devDependencies</code></td><td>Dépendances pour le <em>développement</em> seulement (pas livrées telles quelles à l'utilisateur).</td></tr>
+      <tr><td><code>"electron"</code></td><td>Le package Electron : contient Chromium + Node.js embarqués pour votre app Desktop.</td></tr>
+    </table>
     <p>Sur Linux (Pop!_OS, Ubuntu), si messages GPU au démarrage, utilisez plutôt :</p>
     <pre><code>"start": "electron . --disable-gpu-sandbox"</code></pre>
 

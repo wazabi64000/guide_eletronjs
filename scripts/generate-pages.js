@@ -6,6 +6,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  ce, PKG_FINAL, CMD_INSTALL, HTML_INDEX, PRELOAD_BASIC, WEB_PREFS,
+  PRELOAD_IPC, MAIN_IPC, HTML_IPC, NAV_ESM, MENU_ESM, DIALOG_ESM, DIALOG_FILE,
+  CSP_META, DEBUG_DEVTOOLS, DEBUG_VSCODE, LOG_ESM, JEST_ESM, PLAYWRIGHT_ESM,
+  BUILD_PKG, UPDATER_ESM, UPDATER_FLOW, MAIN_MINIMAL, PROCESS_MODEL,
+  BUILD_INSTALL, DIST_CMDS, TEST_CMDS, PLAYWRIGHT_INSTALL,
+} from './course-explain.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const pagesDir = path.join(__dirname, '..', 'pages');
@@ -110,6 +117,7 @@ npm --version    # ex: 10.x.x</code></pre>
 cd mon-app-electron
 npm init -y
 npm install electron --save-dev</code></pre>
+    ${CMD_INSTALL}
 
     <h2>4. Étape A — Ce que <code>npm init -y</code> produit réellement</h2>
     <p>Après <code>npm init -y</code>, votre <code>package.json</code> ressemble exactement à ceci :</p>
@@ -125,6 +133,11 @@ npm install electron --save-dev</code></pre>
   "license": "ISC",
   "description": ""
 }</code></pre>
+    ${ce('Explication — champs par défaut de npm init', [
+      ['"main": "index.js"', 'Valeur <strong>par défaut de npm</strong> — point d\'entrée Node.js classique, pas adapté à Electron.'],
+      ['"scripts".test', 'Script de test placeholder — on le garde, on ajoute <code>start</code> plus tard.'],
+      ['Pas de devDependencies', 'Normal : Electron n\'est pas encore installé à cette étape.'],
+    ])}
     <p>⚠️ <code>"main": "index.js"</code> est le point d'entrée <strong>Node.js par défaut</strong>, pas Electron. Ce fichier n'existe pas encore.</p>
 
     <h2>5. Étape B — Après <code>npm install electron --save-dev</code></h2>
@@ -143,6 +156,11 @@ npm install electron --save-dev</code></pre>
     "electron": "^42.5.0"
   }
 }</code></pre>
+    ${ce('Explication — après npm install electron', [
+      ['devDependencies.electron', 'Electron est listé ici : npm sait qu\'il est requis pour développer l\'app.'],
+      ['^42.5.0', 'Version installée (le <code>^</code> permet les mises à jour mineures compatibles).'],
+      ['"main" toujours index.js', '⚠️ Toujours incorrect — à corriger à l\'étape C.'],
+    ])}
     <p>Electron est installé, mais <strong>l'app ne peut toujours pas démarrer</strong> : <code>index.js</code> n'existe pas.</p>
 
     <h2>6. Étape C — Corriger <code>package.json</code> (obligatoire)</h2>
@@ -171,6 +189,7 @@ npm install electron --save-dev</code></pre>
     "electron": "^42.5.0"
   }
 }</code></pre>
+    ${PKG_FINAL}
     <p><code>"type": "module"</code> active les <strong>modules ESM</strong> : vous utiliserez <code>import</code> au lieu de <code>require()</code> dans <code>main.js</code> et <code>preload.js</code>.</p>
     <div class="alert alert--warning">
       <strong>Ne créez pas <code>index.js</code> !</strong> Si ce fichier existe vide, supprimez-le :
@@ -282,6 +301,7 @@ npm install electron --save-dev</code></pre>
   &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+    ${HTML_INDEX}
 
     <h2>3. Tester dans le navigateur (optionnel)</h2>
     <p>Ouvrez <code>index.html</code> dans Chrome pour vérifier le rendu. Ce n'est <em>pas</em> encore Electron, mais utile pour déboguer le HTML/CSS.</p>
@@ -341,16 +361,121 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });</code></pre>
+    ${MAIN_MINIMAL}
 
     <h2>3. Explication ligne par ligne</h2>
+    <p>Quand vous lancez <code>npm start</code>, Node.js exécute <code>main.js</code> dans le <strong>Main Process</strong>. Voici ce que fait chaque partie du fichier, dans l'ordre d'exécution.</p>
+
+    <div class="ascii-diagram">npm start
+   │
+   ▼
+Electron lit package.json → charge main.js (Main Process)
+   │
+   ▼
+Les import sont résolus
+   │
+   ▼
+app.whenReady() attend que Electron soit prêt
+   │
+   ▼
+createWindow() → new BrowserWindow() → loadFile(index.html)
+   │
+   ▼
+L'utilisateur voit la fenêtre avec votre page HTML</div>
+
+    <h3>Les imports (début du fichier)</h3>
     <table>
-      <tr><th>Ligne</th><th>Rôle</th></tr>
-      <tr><td><code>import … from 'electron'</code></td><td>Import ESM de l'API Electron (Main Process)</td></tr>
-      <tr><td><code>fileURLToPath(import.meta.url)</code></td><td>Équivalent ESM de <code>__dirname</code></td></tr>
-      <tr><td><code>BrowserWindow</code></td><td>Crée une fenêtre Chromium</td></tr>
-      <tr><td><code>win.loadFile()</code></td><td>Affiche <code>index.html</code></td></tr>
-      <tr><td><code>app.whenReady()</code></td><td>Attend l'initialisation d'Electron</td></tr>
+      <tr><th>Code</th><th>Explication détaillée</th></tr>
+      <tr>
+        <td><code>import { app, BrowserWindow } from 'electron'</code></td>
+        <td>
+          <strong><code>app</code></strong> — objet principal qui représente votre application Electron (cycle de vie : démarrage, fermeture).<br>
+          <strong><code>BrowserWindow</code></strong> — classe pour créer une fenêtre Desktop (avec Chromium intégré à l'intérieur).<br>
+          Les accolades <code>{ }</code> signifient qu'on importe seulement ces deux noms depuis le package <code>electron</code>.
+        </td>
+      </tr>
+      <tr>
+        <td><code>import path from 'node:path'</code></td>
+        <td>
+          Module <strong>Node.js</strong> pour manipuler les chemins de fichiers de façon cross-platform
+          (<code>C:\\projets\\</code> sur Windows, <code>/home/user/</code> sur Linux).<br>
+          On l'utilise pour construire le chemin vers <code>index.html</code> sans se tromper de slash.
+        </td>
+      </tr>
+      <tr>
+        <td><code>import { fileURLToPath } from 'node:url'</code></td>
+        <td>
+          En ESM, on n'a pas <code>__dirname</code> automatiquement (contrairement à l'ancien <code>require</code>).<br>
+          <code>import.meta.url</code> donne l'URL du fichier courant (ex : <code>file:///home/.../main.js</code>).<br>
+          <code>fileURLToPath()</code> convertit cette URL en chemin système lisible par <code>loadFile()</code>.
+        </td>
+      </tr>
+      <tr>
+        <td><code>const __dirname = path.dirname(...)</code></td>
+        <td>
+          <strong><code>__dirname</code></strong> = dossier où se trouve <code>main.js</code> (pas le fichier lui-même).<br>
+          Exemple : si <code>main.js</code> est dans <code>/home/user/mon-app-electron/</code>, alors <code>__dirname</code> pointe vers ce dossier.<br>
+          Indispensable pour charger <code>index.html</code> au bon endroit, peu importe d'où vous lancez <code>npm start</code>.
+        </td>
+      </tr>
     </table>
+
+    <h3>La fonction <code>createWindow()</code></h3>
+    <table>
+      <tr><th>Code</th><th>Explication détaillée</th></tr>
+      <tr>
+        <td><code>new BrowserWindow({ ... })</code></td>
+        <td>
+          Crée une <strong>nouvelle fenêtre</strong> native (barre de titre, boutons réduire/fermer).<br>
+          À l'intérieur, Electron embarque un Chromium invisible qui affichera votre HTML.<br>
+          <code>width</code> / <code>height</code> — taille en pixels.<br>
+          <code>title</code> — texte affiché dans la barre de titre de la fenêtre.
+        </td>
+      </tr>
+      <tr>
+        <td><code>win.loadFile(path.join(__dirname, 'index.html'))</code></td>
+        <td>
+          <strong><code>path.join(__dirname, 'index.html')</code></strong> — assemble le chemin complet vers votre page
+          (ex : <code>/home/user/mon-app-electron/index.html</code>).<br>
+          <strong><code>win.loadFile(...)</code></strong> — charge ce fichier HTML <em>dans</em> la fenêtre. C'est le moment où votre interface devient visible.<br>
+          Sans cette ligne : fenêtre vide ou blanche.
+        </td>
+      </tr>
+    </table>
+
+    <h3>Le cycle de vie de l'application</h3>
+    <table>
+      <tr><th>Code</th><th>Explication détaillée</th></tr>
+      <tr>
+        <td><code>app.whenReady().then(createWindow)</code></td>
+        <td>
+          Electron a besoin de quelques millisecondes pour s'initialiser (Chromium, modules internes).<br>
+          <strong>On ne peut pas</strong> créer une fenêtre avant la fin de cette initialisation.<br>
+          <code>whenReady()</code> retourne une Promise : dès qu'Electron est prêt, il appelle <code>createWindow()</code>.<br>
+          C'est la ligne qui <strong>déclenche l'affichage</strong> de votre app.
+        </td>
+      </tr>
+      <tr>
+        <td><code>app.on('window-all-closed', ...)</code></td>
+        <td>
+          Événement déclenché quand l'utilisateur <strong>ferme toutes les fenêtres</strong>.<br>
+          Sur <strong>Windows et Linux</strong> : on quitte l'application (<code>app.quit()</code>).<br>
+          Sur <strong>macOS</strong> : l'app reste souvent active dans le dock → on ne quitte pas automatiquement (<code>process.platform !== 'darwin'</code>).
+        </td>
+      </tr>
+      <tr>
+        <td><code>app.on('activate', ...)</code></td>
+        <td>
+          Spécifique <strong>macOS</strong> : quand l'utilisateur clique sur l'icône du dock et qu'aucune fenêtre n'est ouverte.<br>
+          On recrée une fenêtre pour que l'app ne paraisse pas « morte ». Bonne pratique officielle Electron.
+        </td>
+      </tr>
+    </table>
+
+    <div class="alert alert--success">
+      <strong>À retenir :</strong> <code>main.js</code> ne dessine rien à l'écran directement. Il <em>orchestre</em> :
+      attendre Electron → créer une fenêtre → y charger <code>index.html</code>. C'est le HTML qui contient l'interface visible.
+    </div>
 
     <h2>4. package.json final (vérifiez avant de lancer)</h2>
     <pre><code>{
@@ -367,6 +492,7 @@ app.on('activate', () => {
     "electron": "^42.5.0"
   }
 }</code></pre>
+    ${PKG_FINAL}
     <p>Sur Linux (Pop!_OS, Ubuntu), si messages GPU au démarrage, utilisez plutôt :</p>
     <pre><code>"start": "electron . --disable-gpu-sandbox"</code></pre>
 
@@ -469,6 +595,7 @@ MESA-LOADER: failed to open dri ... Permission non accordée</code></pre>
       <strong>Main & Preload</strong> = ESM (<code>import</code>) grâce à <code>"type": "module"</code> dans package.json.<br>
       <strong>Renderer</strong> = JavaScript navigateur (peut utiliser <code>&lt;script type="module"&gt;</code>).
     </div>
+    ${PROCESS_MODEL}
 
     <h2>4. Exercice</h2>
     <p>Ajoutez dans <code>index.html</code> un script qui affiche <code>navigator.userAgent</code> — observez que c'est Chromium.</p>
@@ -505,6 +632,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     node: process.versions.node,
   },
 });</code></pre>
+    ${PRELOAD_BASIC}
 
     <h2>3. Configurer main.js</h2>
     <pre><code>const win = new BrowserWindow({
@@ -514,11 +642,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
     nodeIntegration: false,    // Obligatoire (sécurité)
   },
 });</code></pre>
+    ${WEB_PREFS}
 
     <h2>4. Utiliser dans index.html</h2>
     <pre><code>&lt;script&gt;
   document.body.innerHTML += \`&lt;p&gt;Electron \${window.electronAPI.versions.electron}&lt;/p&gt;\`;
 &lt;/script&gt;</code></pre>
+    ${ce('Explication — utilisation dans le Renderer', [
+      ['window.electronAPI', 'Objet créé par <code>contextBridge</code> dans preload — accessible comme une variable globale.'],
+      ['versions.electron', 'Lit la version Electron exposée par le preload — preuve que le pont fonctionne.'],
+      ['Template literal \\`…\\${}…\\`', 'Chaîne JavaScript qui insère une variable dans le HTML.'],
+    ])}
 
     <h2>5. Exercice</h2>
     <p>Affichez la plateforme (<code>win32</code>, <code>linux</code>, <code>darwin</code>) dans votre page.</p>`,
@@ -544,6 +678,7 @@ contextBridge.exposeInMainWorld('api', {
   sauvegarder: (texte) => ipcRenderer.invoke('save-text', texte),
   lire: () => ipcRenderer.invoke('read-text'),
 });</code></pre>
+    ${PRELOAD_IPC}
 
     <h2>3. main.js (ESM)</h2>
     <pre><code>import { app, ipcMain } from 'electron';
@@ -561,6 +696,7 @@ ipcMain.handle('read-text', () => {
   if (fs.existsSync(fichier)) return fs.readFileSync(fichier, 'utf-8');
   return '';
 });</code></pre>
+    ${MAIN_IPC}
 
     <h2>4. index.html</h2>
     <pre><code>&lt;textarea id="editor"&gt;&lt;/textarea&gt;
@@ -571,6 +707,7 @@ ipcMain.handle('read-text', () => {
   document.getElementById('save').onclick = () =>
     window.api.sauvegarder(editor.value);
 &lt;/script&gt;</code></pre>
+    ${HTML_IPC}
 
     <h2>5. Schéma IPC</h2>
     <div class="ascii-diagram">Renderer  →  window.api.save()  →  preload  →  ipcRenderer.invoke
@@ -611,16 +748,26 @@ export function allerVers(page) {
 &lt;script type="module"&gt;
   import { allerVers } from '../js/navigation.js';
   document.getElementById('btn-params').onclick = () =&gt; allerVers('parametres');
-&lt;/script&gt;</code></pre>
+}</code></pre>
+    ${NAV_ESM}
 
     <h2>4. Charger une autre page depuis main.js</h2>
     <pre><code>win.loadFile(path.join(__dirname, 'pages', 'accueil.html'));</code></pre>
+    ${ce('Explication — loadFile multi-pages', [
+      ['path.join(__dirname, \'pages\', …)', 'Construit le chemin : dossier du projet + sous-dossier <code>pages/</code> + fichier HTML.'],
+      ['loadFile(…)', 'Charge cette page comme page d\'accueil au démarrage de la fenêtre.'],
+    ])}
 
     <h2>5. Plusieurs fenêtres (option)</h2>
     <pre><code>function ouvrirParametres() {
   const win = new BrowserWindow({ width: 500, height: 400, parent: mainWindow });
   win.loadFile('pages/parametres.html');
 }</code></pre>
+    ${ce('Explication — fenêtre secondaire', [
+      ['new BrowserWindow({ parent: mainWindow })', 'Crée une fenêtre « enfant » liée à la fenêtre principale.'],
+      ['width / height', 'Taille de la fenêtre secondaire (paramètres).'],
+      ['loadFile(\'pages/parametres.html\')', 'Charge une page HTML différente dans cette nouvelle fenêtre.'],
+    ])}
 
     <h2>6. Exercice</h2>
     <p>Créez 3 pages : Accueil, Paramètres (choix thème clair/sombre), À propos (version app).</p>`,
@@ -651,6 +798,7 @@ const template = [
   },
 ];
 Menu.setApplicationMenu(Menu.buildFromTemplate(template));</code></pre>
+    ${MENU_ESM}
 
     <h2>2. Boîte de dialogue (ESM)</h2>
     <pre><code>import { dialog } from 'electron';
@@ -660,6 +808,7 @@ const { response } = await dialog.showMessageBox({
   buttons: ['Oui', 'Non'],
   message: 'Enregistrer avant de quitter ?',
 });</code></pre>
+    ${DIALOG_ESM}
 
     <h2>3. Exercice</h2>
     <p>Menu Fichier → Quitter avec confirmation si texte non sauvegardé.</p>`,
@@ -690,6 +839,7 @@ ipcMain.handle('dialog:save', async (_e, contenu) => {
   fs.writeFileSync(filePath, contenu, 'utf-8');
   return true;
 });</code></pre>
+    ${DIALOG_FILE}
 
     <h2>2. preload.js (ESM)</h2>
     <pre><code>import { contextBridge, ipcRenderer } from 'electron';
@@ -698,6 +848,10 @@ contextBridge.exposeInMainWorld('api', {
   ouvrir: () => ipcRenderer.invoke('dialog:open'),
   enregistrer: (c) => ipcRenderer.invoke('dialog:save', c),
 });</code></pre>
+    ${ce('Explication — preload pour fichiers', [
+      ['ouvrir: () => ipcRenderer.invoke(…)', 'Expose <code>window.api.ouvrir()</code> — ouvre le dialogue système via le Main.'],
+      ['enregistrer: (c) => …', 'Passe le contenu <code>c</code> au Main pour la boîte « Enregistrer sous ».'],
+    ])}
 
     <h2>3. Challenge</h2>
     <p>Éditeur texte complet : Nouveau, Ouvrir, Enregistrer via menu + raccourcis clavier.</p>`,
@@ -722,6 +876,7 @@ contextBridge.exposeInMainWorld('api', {
     <h2>2. Content Security Policy</h2>
     <pre><code>&lt;meta http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"&gt;</code></pre>
+    ${CSP_META}
 
     <h2>3. Ne jamais faire</h2>
     <div class="alert alert--warning">
@@ -736,6 +891,7 @@ contextBridge.exposeInMainWorld('api', {
     body: `
     <h2>1. Renderer — DevTools</h2>
     <pre><code>mainWindow.webContents.openDevTools(); // mode dev uniquement</code></pre>
+    ${DEBUG_DEVTOOLS}
 
     <h2>2. Main Process — VS Code</h2>
     <pre><code>// .vscode/launch.json
@@ -751,12 +907,14 @@ contextBridge.exposeInMainWorld('api', {
     "outputCapture": "std"
   }]
 }</code></pre>
+    ${DEBUG_VSCODE}
 
     <h2>3. Logs (ESM)</h2>
     <pre><code>npm install electron-log --save
 // main.js
 import log from 'electron-log';
-log.info('Application démarrée');</code></pre>`,
+log.info('Application démarrée');</code></pre>
+    ${LOG_ESM}`,
   },
   {
     file: '12-tests', id: '12-tests',
@@ -775,12 +933,18 @@ export function formaterTitre(t) { return t.trim() || 'Sans titre'; }
 // utils/format.test.js
 import { formaterTitre } from './format.js';
 test('titre vide', () => expect(formaterTitre('')).toBe('Sans titre'));</code></pre>
+    ${JEST_ESM}
     <pre><code>// package.json
 "scripts": { "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js" }</code></pre>
+    ${ce('Explication — script test Jest ESM', [
+      ['--experimental-vm-modules', 'Indispensable pour que Jest comprenne les <code>import</code> ESM.'],
+      ['node_modules/jest/bin/jest.js', 'Lance Jest sans installation globale.'],
+    ])}
 
     <h2>3. Tests E2E — Playwright</h2>
     <pre><code>npm install @playwright/test --save-dev
 npx playwright install</code></pre>
+    ${PLAYWRIGHT_INSTALL}
     <pre><code>// tests/electron.spec.js (ESM)
 import { test, expect, _electron as electron } from '@playwright/test';
 
@@ -792,10 +956,12 @@ test('fenêtre principale', async () => {
   await expect(window.locator('#message')).not.toBeEmpty();
   await app.close();
 });</code></pre>
+    ${PLAYWRIGHT_ESM}
 
     <h2>4. Lancer les tests</h2>
     <pre><code>npm test
 npx playwright test</code></pre>
+    ${TEST_CMDS}
 
     <h2>5. Challenge</h2>
     <p>Écrivez 3 tests unitaires + 1 test E2E qui vérifie le bouton de votre page d'accueil.</p>`,
@@ -813,6 +979,7 @@ npx playwright test</code></pre>
 
     <h2>2. Installation</h2>
     <pre><code>npm install electron-builder --save-dev</code></pre>
+    ${BUILD_INSTALL}
 
     <h2>3. package.json</h2>
     <pre><code>{
@@ -848,6 +1015,7 @@ npx playwright test</code></pre>
     }
   }
 }</code></pre>
+    ${BUILD_PKG}
 
     <h2>4. Workflow recommandé</h2>
     <div class="ascii-diagram">1. npm test          ← tests passent
@@ -860,6 +1028,7 @@ npx playwright test</code></pre>
 npm run dist:win     # Windows (depuis n'importe quel OS avec Wine si Linux)
 npm run dist:mac     # macOS (nécessite un Mac pour signer)
 npm run dist:linux   # Linux AppImage</code></pre>
+    ${DIST_CMDS}
 
     <h2>6. Résultat dans dist/</h2>
     <table>
@@ -884,6 +1053,8 @@ npm run dist:linux   # Linux AppImage</code></pre>
 import { autoUpdater } from 'electron-updater';
 import { app } from 'electron';
 app.whenReady().then(() => autoUpdater.checkForUpdatesAndNotify());</code></pre>
+    ${UPDATER_ESM}
+    ${UPDATER_FLOW}
 
     <h2>2. CI/CD simplifié (GitHub Actions)</h2>
     <pre><code># .github/workflows/build.yml
@@ -907,6 +1078,13 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: dist/*</code></pre>
+    ${ce('Explication — workflow GitHub Actions', [
+      ['on.push.tags: [\'v*\']', 'Déclenche le build quand vous poussez un tag Git (ex : v1.0.0).'],
+      ['matrix.os', 'Compile sur Linux, Windows et macOS en parallèle.'],
+      ['npm ci', 'Installe les dépendances exactement comme le lockfile.'],
+      ['npm run dist', 'Produit les installateurs pour chaque OS.'],
+      ['action-gh-release', 'Publie les fichiers compilés sur GitHub Releases.'],
+    ])}
 
     <h2>3. Checklist publication</h2>
     <ul>
@@ -951,6 +1129,7 @@ const PROJECTS = [
     "electron": "^42.5.0"
   }
 }</code></pre>
+    ${PKG_FINAL}
     <p>Tous les <code>.js</code> du Main et Preload utilisent <code>import</code> / <code>export</code>.</p>
     <h2>Livrable</h2>
     <p>Dossier <code>dist/</code> avec l'installateur + capture d'écran.</p>`,

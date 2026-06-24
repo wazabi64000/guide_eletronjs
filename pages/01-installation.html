@@ -39,6 +39,15 @@ npm --version    # ex: 10.x.x</code></pre>
 cd mon-app-electron
 npm init -y
 npm install electron --save-dev</code></pre>
+    
+    <h3 class="explain-title">Explication — commandes du terminal</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>mkdir mon-app-electron</code></td><td>Crée un nouveau dossier pour isoler votre projet.</td></tr>
+      <tr><td><code>cd mon-app-electron</code></td><td>Entre dans ce dossier — toutes les commandes suivantes s'y exécutent.</td></tr>
+      <tr><td><code>npm init -y</code></td><td>Crée <code>package.json</code> avec les valeurs par défaut (<code>-y</code> = oui à tout).</td></tr>
+      <tr><td><code>npm install electron --save-dev</code></td><td>Télécharge Electron dans <code>node_modules/</code> et l'enregistre dans <code>package.json</code>.</td></tr>
+    </table>
 
     <h2>4. Étape A — Ce que <code>npm init -y</code> produit réellement</h2>
     <p>Après <code>npm init -y</code>, votre <code>package.json</code> ressemble exactement à ceci :</p>
@@ -54,6 +63,14 @@ npm install electron --save-dev</code></pre>
   "license": "ISC",
   "description": ""
 }</code></pre>
+    
+    <h3 class="explain-title">Explication — champs par défaut de npm init</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>"main": "index.js"</code></td><td>Valeur <strong>par défaut de npm</strong> — point d'entrée Node.js classique, pas adapté à Electron.</td></tr>
+      <tr><td><code>"scripts".test</code></td><td>Script de test placeholder — on le garde, on ajoute <code>start</code> plus tard.</td></tr>
+      <tr><td><code>Pas de devDependencies</code></td><td>Normal : Electron n'est pas encore installé à cette étape.</td></tr>
+    </table>
     <p>⚠️ <code>"main": "index.js"</code> est le point d'entrée <strong>Node.js par défaut</strong>, pas Electron. Ce fichier n'existe pas encore.</p>
 
     <h2>5. Étape B — Après <code>npm install electron --save-dev</code></h2>
@@ -72,6 +89,14 @@ npm install electron --save-dev</code></pre>
     "electron": "^42.5.0"
   }
 }</code></pre>
+    
+    <h3 class="explain-title">Explication — après npm install electron</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>devDependencies.electron</code></td><td>Electron est listé ici : npm sait qu'il est requis pour développer l'app.</td></tr>
+      <tr><td><code>^42.5.0</code></td><td>Version installée (le <code>^</code> permet les mises à jour mineures compatibles).</td></tr>
+      <tr><td><code>"main" toujours index.js</code></td><td>⚠️ Toujours incorrect — à corriger à l'étape C.</td></tr>
+    </table>
     <p>Electron est installé, mais <strong>l'app ne peut toujours pas démarrer</strong> : <code>index.js</code> n'existe pas.</p>
 
     <h2>6. Étape C — Corriger <code>package.json</code> (obligatoire)</h2>
@@ -100,6 +125,18 @@ npm install electron --save-dev</code></pre>
     "electron": "^42.5.0"
   }
 }</code></pre>
+    
+    <h3 class="explain-title">Explication — package.json (champs importants)</h3>
+    <table class="explain-table">
+      <tr><th>Code</th><th>Ce que ça fait (simplement)</th></tr>
+      <tr><td><code>"name"</code></td><td>Nom de votre projet. Utilisé par npm pour l'identifier.</td></tr>
+      <tr><td><code>"version"</code></td><td>Numéro de version de l'app (ex : 1.0.0 → 1.0.1 pour une mise à jour).</td></tr>
+      <tr><td><code>"type": "module"</code></td><td>Active les <strong>modules ESM</strong> : dans vos <code>.js</code>, vous écrivez <code>import</code> au lieu de <code>require()</code>.</td></tr>
+      <tr><td><code>"main": "main.js"</code></td><td>Fichier que Electron exécute en premier au lancement — le <strong>Main Process</strong>.</td></tr>
+      <tr><td><code>"scripts".start</code></td><td>Définit la commande <code>npm start</code> → lance <code>electron .</code> (le point = dossier courant).</td></tr>
+      <tr><td><code>devDependencies</code></td><td>Dépendances pour le <em>développement</em> seulement (pas livrées telles quelles à l'utilisateur).</td></tr>
+      <tr><td><code>"electron"</code></td><td>Le package Electron : contient Chromium + Node.js embarqués pour votre app Desktop.</td></tr>
+    </table>
     <p><code>"type": "module"</code> active les <strong>modules ESM</strong> : vous utiliserez <code>import</code> au lieu de <code>require()</code> dans <code>main.js</code> et <code>preload.js</code>.</p>
     <div class="alert alert--warning">
       <strong>Ne créez pas <code>index.js</code> !</strong> Si ce fichier existe vide, supprimez-le :
