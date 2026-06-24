@@ -42,12 +42,16 @@
 
     <h2>3. Où mettre mon code ?</h2>
     <table>
-      <tr><th>Besoin</th><th>Fichier</th><th>Processus</th></tr>
-      <tr><td>Créer une fenêtre</td><td>main.js</td><td>Main</td></tr>
-      <tr><td>Style CSS, boutons</td><td>index.html</td><td>Renderer</td></tr>
-      <tr><td>Lire un fichier disque</td><td>main.js</td><td>Main</td></tr>
-      <tr><td>Réagir au clic utilisateur</td><td>renderer.js ou &lt;script&gt;</td><td>Renderer</td></tr>
+      <tr><th>Besoin</th><th>Fichier</th><th>Syntaxe</th></tr>
+      <tr><td>Créer une fenêtre</td><td>main.js</td><td><code>import</code> ESM</td></tr>
+      <tr><td>Style CSS, boutons</td><td>index.html</td><td>HTML + &lt;script&gt;</td></tr>
+      <tr><td>Pont sécurisé</td><td>preload.js</td><td><code>import</code> ESM</td></tr>
+      <tr><td>Logique UI modulaire</td><td>renderer.js</td><td><code>import</code> via &lt;script type="module"&gt;</td></tr>
     </table>
+    <div class="alert alert--info">
+      <strong>Main & Preload</strong> = ESM (<code>import</code>) grâce à <code>"type": "module"</code> dans package.json.<br>
+      <strong>Renderer</strong> = JavaScript navigateur (peut utiliser <code>&lt;script type="module"&gt;</code>).
+    </div>
 
     <h2>4. Exercice</h2>
     <p>Ajoutez dans <code>index.html</code> un script qui affiche <code>navigator.userAgent</code> — observez que c'est Chromium.</p>

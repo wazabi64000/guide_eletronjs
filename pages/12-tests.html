@@ -33,8 +33,8 @@ test('titre vide', () => expect(formaterTitre('')).toBe('Sans titre'));</code></
     <h2>3. Tests E2E — Playwright</h2>
     <pre><code>npm install @playwright/test --save-dev
 npx playwright install</code></pre>
-    <pre><code>// tests/electron.spec.js
-const { test, expect, _electron: electron } = require('@playwright/test');
+    <pre><code>// tests/electron.spec.js (ESM)
+import { test, expect, _electron as electron } from '@playwright/test';
 
 test('fenêtre principale', async () => {
   const app = await electron.launch({ args: ['.'] });

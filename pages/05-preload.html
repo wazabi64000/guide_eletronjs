@@ -24,9 +24,9 @@
       <li>Exposer une API sécurisée au Renderer via <code>contextBridge</code></li>
     </ul>
 
-    <h2>2. preload.js</h2>
-    <pre><code>// preload.js — Pont entre Main et Renderer
-const { contextBridge } = require('electron');
+    <h2>2. preload.js (ESM)</h2>
+    <pre><code>// preload.js — Pont entre Main et Renderer (ESM)
+import { contextBridge } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,

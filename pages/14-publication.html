@@ -18,8 +18,9 @@
     <h2>1. Publier sur GitHub Releases</h2>
     <pre><code>npm install electron-updater --save
 
-// main.js
-const { autoUpdater } = require('electron-updater');
+// main.js (ESM)
+import { autoUpdater } from 'electron-updater';
+import { app } from 'electron';
 app.whenReady().then(() => autoUpdater.checkForUpdatesAndNotify());</code></pre>
 
     <h2>2. CI/CD simplifié (GitHub Actions)</h2>

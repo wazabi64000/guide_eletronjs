@@ -15,8 +15,9 @@
       <span class="course-meta__badge">Prérequis : Chapitre 8</span>
     </div>
     
-    <h2>1. Dialog Ouvrir / Enregistrer</h2>
-    <pre><code>const { dialog } = require('electron');
+    <h2>1. Dialog Ouvrir / Enregistrer (ESM — dans main.js)</h2>
+    <pre><code>import { dialog, ipcMain } from 'electron';
+import fs from 'node:fs';
 
 ipcMain.handle('dialog:open', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog({
@@ -36,8 +37,10 @@ ipcMain.handle('dialog:save', async (_e, contenu) => {
   return true;
 });</code></pre>
 
-    <h2>2. preload.js</h2>
-    <pre><code>contextBridge.exposeInMainWorld('api', {
+    <h2>2. preload.js (ESM)</h2>
+    <pre><code>import { contextBridge, ipcRenderer } from 'electron';
+
+contextBridge.exposeInMainWorld('api', {
   ouvrir: () => ipcRenderer.invoke('dialog:open'),
   enregistrer: (c) => ipcRenderer.invoke('dialog:save', c),
 });</code></pre>

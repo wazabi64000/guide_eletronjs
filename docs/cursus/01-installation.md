@@ -1,6 +1,8 @@
-# Chapitre 1 — Installation officielle d'Electron
+# Chapitre 1 — Installation officielle d'Electron (ESM)
 
-**Source :** [Installation avancée — Electron](https://www.electronjs.org/fr/docs/latest/tutorial/installation)
+**Source :** [Installation](https://www.electronjs.org/fr/docs/latest/tutorial/installation) · [ESM dans Electron](https://www.electronjs.org/fr/docs/latest/tutorial/esm)
+
+> Ce cours utilise **uniquement les modules ESM** (`import` / `export`), pas CommonJS (`require`).
 
 ## Commandes
 
@@ -10,32 +12,14 @@ npm init -y
 npm install electron --save-dev
 ```
 
-## Après `npm init -y` (réel)
+## package.json corrigé (obligatoire)
 
 ```json
 {
   "name": "mon-app-electron",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
-}
-```
-
-## Après `npm install electron --save-dev`
-
-Ajout de `devDependencies.electron`. Le champ `"main": "index.js"` est **toujours incorrect** pour Electron.
-
-## Correction obligatoire
-
-| Champ | Avant | Après |
-|-------|-------|-------|
-| `main` | `index.js` | `main.js` |
-| `scripts` | seulement `test` | + `"start": "electron ."` |
-
-```json
-{
+  "description": "Ma première app Electron",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -47,18 +31,32 @@ Ajout de `devDependencies.electron`. Le champ `"main": "index.js"` est **toujour
 }
 ```
 
-**Ne pas créer `index.js`.** Supprimer si présent : `rm index.js`
+| Champ | Valeur | Pourquoi |
+|-------|--------|----------|
+| `type` | `"module"` | Active `import` / `export` |
+| `main` | `"main.js"` | Point d'entrée Electron (pas `index.js`) |
 
-## Fil conducteur
+## main.js (ESM)
 
-| Chapitre | Fichier créé | `npm start` |
-|----------|--------------|-------------|
-| 1 | package.json corrigé | ❌ |
-| 2 | index.html | ❌ (main.js manquant) |
-| 3 | main.js | ✅ |
+```javascript
+import { app, BrowserWindow } from 'electron';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-## Piège : index.js vs index.html vs main.js
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-- `index.js` → entrée Node par défaut de npm (ne pas utiliser)
-- `index.html` → interface utilisateur (chapitre 2)
-- `main.js` → entrée Electron (chapitre 3)
+function createWindow() {
+  const win = new BrowserWindow({ width: 900, height: 600 });
+  win.loadFile(path.join(__dirname, 'index.html'));
+}
+
+app.whenReady().then(createWindow);
+```
+
+## Erreurs courantes
+
+| Erreur | Solution |
+|--------|----------|
+| `Cannot find module index.js` | `"main": "main.js"` |
+| `require is not defined` | `"type": "module"` + `import` |
+| `Cannot find module main.js` | Créer main.js (chapitre 3) |

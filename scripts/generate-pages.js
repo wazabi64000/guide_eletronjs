@@ -12,6 +12,14 @@ const pagesDir = path.join(__dirname, '..', 'pages');
 const force = process.argv.includes('--force');
 
 const OFFICIAL = 'https://www.electronjs.org/fr/docs/latest';
+const ESM_DOC = `${OFFICIAL}/tutorial/esm`;
+
+/** En-tête ESM standard pour main.js (réutilisé dans les exemples) */
+const MAIN_IMPORTS = `import { app, BrowserWindow } from 'electron';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));`;
 
 const MODULES = [
   {
@@ -59,9 +67,14 @@ const MODULES = [
     <h2>5. Prérequis</h2>
     <ul>
       <li>Savoir écrire un fichier <code>index.html</code> basique</li>
-      <li>Connaître <code>console.log()</code> en JavaScript</li>
+      <li>Connaître <code>import</code> / <code>export</code> en JavaScript (modules ESM)</li>
       <li>Avoir Node.js installé (nous le vérifions au chapitre 1)</li>
     </ul>
+    <div class="alert alert--info">
+      <strong>Modules ESM uniquement</strong> — ce cours utilise <code>import</code> / <code>export</code>,
+      pas <code>require()</code> (CommonJS). Voir la
+      <a href="${ESM_DOC}" target="_blank" rel="noopener">doc officielle ESM dans Electron</a>.
+    </div>
     <h2>6. Quiz</h2>
     <div class="quiz-block"><h4>Q1. Electron sert à créer…</h4>
       <label class="quiz-option"><input type="radio" checked> Des applications Desktop ✓</label>
@@ -137,6 +150,7 @@ npm install electron --save-dev</code></pre>
     <table>
       <tr><th>Champ</th><th>❌ Avant</th><th>✅ Après</th></tr>
       <tr><td><code>main</code></td><td><code>"index.js"</code></td><td><code>"main.js"</code></td></tr>
+      <tr><td><code>type</code></td><td>absent</td><td><code>"module"</code> (ESM — obligatoire)</td></tr>
       <tr><td><code>scripts</code></td><td>seulement <code>test</code></td><td>ajouter <code>"start": "electron ."</code></td></tr>
       <tr><td><code>description</code></td><td><code>""</code></td><td><code>"Ma première app Electron"</code> (optionnel)</td></tr>
     </table>
@@ -144,6 +158,7 @@ npm install electron --save-dev</code></pre>
   "name": "mon-app-electron",
   "version": "1.0.0",
   "description": "Ma première app Electron",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "test": "echo \\"Error: no test specified\\" && exit 1",
@@ -156,6 +171,7 @@ npm install electron --save-dev</code></pre>
     "electron": "^42.5.0"
   }
 }</code></pre>
+    <p><code>"type": "module"</code> active les <strong>modules ESM</strong> : vous utiliserez <code>import</code> au lieu de <code>require()</code> dans <code>main.js</code> et <code>preload.js</code>.</p>
     <div class="alert alert--warning">
       <strong>Ne créez pas <code>index.js</code> !</strong> Si ce fichier existe vide, supprimez-le :
       <code>rm index.js</code>. Le point d'entrée Electron est <code>main.js</code> (chapitre 3).
@@ -199,6 +215,7 @@ npm install electron --save-dev</code></pre>
       <tr><td><code>Cannot find module 'index.js'</code></td><td><code>"main": "index.js"</code> non modifié</td><td>Mettre <code>"main": "main.js"</code></td></tr>
       <tr><td><code>Cannot find module 'main.js'</code></td><td>Chapitre 3 pas fait</td><td>Créer <code>main.js</code> ou attendre ch. 3</td></tr>
       <tr><td><code>index.js</code> vide existe</td><td>Confusion index.js / main.js</td><td><code>rm index.js</code> + <code>"main": "main.js"</code></td></tr>
+      <tr><td><code>require is not defined</code></td><td>ESM activé sans <code>import</code></td><td><code>"type": "module"</code> + utiliser <code>import</code></td></tr>
       <tr><td>ELIFECYCLE, ETIMEDOUT</td><td>Réseau</td><td><code>npm install --verbose electron</code></td></tr>
     </table>
 
@@ -301,10 +318,9 @@ npm install electron --save-dev</code></pre>
       <li>Lancer l'app avec <code>npm start</code></li>
     </ul>
 
-    <h2>2. main.js — version minimale</h2>
-    <pre><code>// main.js — Point d'entrée Electron (Main Process)
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+    <h2>2. main.js — version minimale (ESM)</h2>
+    <pre><code>// main.js — Main Process (modules ESM)
+${MAIN_IMPORTS}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -313,19 +329,15 @@ function createWindow() {
     title: 'Ma première app Electron',
   });
 
-  // Charge index.html dans la fenêtre
   win.loadFile(path.join(__dirname, 'index.html'));
 }
 
-// Quand Electron est prêt, créer la fenêtre
 app.whenReady().then(createWindow);
 
-// Quitter sur Windows/Linux quand toutes les fenêtres sont fermées
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-// macOS : recréer une fenêtre si l'utilisateur clique sur l'icône dock
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });</code></pre>
@@ -333,10 +345,11 @@ app.on('activate', () => {
     <h2>3. Explication ligne par ligne</h2>
     <table>
       <tr><th>Ligne</th><th>Rôle</th></tr>
-      <tr><td><code>require('electron')</code></td><td>Importe l'API Electron côté Node.js</td></tr>
-      <tr><td><code>BrowserWindow</code></td><td>Crée une fenêtre avec Chromium intégré</td></tr>
-      <tr><td><code>win.loadFile()</code></td><td>Affiche votre page HTML locale</td></tr>
-      <tr><td><code>app.whenReady()</code></td><td>Attend qu'Electron soit initialisé</td></tr>
+      <tr><td><code>import … from 'electron'</code></td><td>Import ESM de l'API Electron (Main Process)</td></tr>
+      <tr><td><code>fileURLToPath(import.meta.url)</code></td><td>Équivalent ESM de <code>__dirname</code></td></tr>
+      <tr><td><code>BrowserWindow</code></td><td>Crée une fenêtre Chromium</td></tr>
+      <tr><td><code>win.loadFile()</code></td><td>Affiche <code>index.html</code></td></tr>
+      <tr><td><code>app.whenReady()</code></td><td>Attend l'initialisation d'Electron</td></tr>
     </table>
 
     <h2>4. package.json final (vérifiez avant de lancer)</h2>
@@ -344,6 +357,7 @@ app.on('activate', () => {
   "name": "mon-app-electron",
   "version": "1.0.0",
   "description": "Ma première app Electron",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "test": "echo \\"Error: no test specified\\" && exit 1",
@@ -381,7 +395,8 @@ app.on('activate', () => {
       <tr><th>Vérification</th><th>Attendu</th></tr>
       <tr><td><code>package.json</code> → <code>main</code></td><td><code>"main.js"</code> (pas index.js)</td></tr>
       <tr><td>Fichier <code>index.js</code></td><td>Absent (supprimez-le s'il existe)</td></tr>
-      <tr><td>Fichier <code>main.js</code></td><td>Présent, non vide</td></tr>
+      <tr><td><code>package.json</code> → <code>type</code></td><td><code>"module"</code> (ESM)</td></tr>
+      <tr><td>Fichier <code>main.js</code></td><td>Présent, avec <code>import</code> ESM</td></tr>
       <tr><td>Fichier <code>index.html</code></td><td>Présent</td></tr>
       <tr><td><code>npm start</code></td><td>Fenêtre Electron visible</td></tr>
     </table>
@@ -444,12 +459,16 @@ MESA-LOADER: failed to open dri ... Permission non accordée</code></pre>
 
     <h2>3. Où mettre mon code ?</h2>
     <table>
-      <tr><th>Besoin</th><th>Fichier</th><th>Processus</th></tr>
-      <tr><td>Créer une fenêtre</td><td>main.js</td><td>Main</td></tr>
-      <tr><td>Style CSS, boutons</td><td>index.html</td><td>Renderer</td></tr>
-      <tr><td>Lire un fichier disque</td><td>main.js</td><td>Main</td></tr>
-      <tr><td>Réagir au clic utilisateur</td><td>renderer.js ou &lt;script&gt;</td><td>Renderer</td></tr>
+      <tr><th>Besoin</th><th>Fichier</th><th>Syntaxe</th></tr>
+      <tr><td>Créer une fenêtre</td><td>main.js</td><td><code>import</code> ESM</td></tr>
+      <tr><td>Style CSS, boutons</td><td>index.html</td><td>HTML + &lt;script&gt;</td></tr>
+      <tr><td>Pont sécurisé</td><td>preload.js</td><td><code>import</code> ESM</td></tr>
+      <tr><td>Logique UI modulaire</td><td>renderer.js</td><td><code>import</code> via &lt;script type="module"&gt;</td></tr>
     </table>
+    <div class="alert alert--info">
+      <strong>Main & Preload</strong> = ESM (<code>import</code>) grâce à <code>"type": "module"</code> dans package.json.<br>
+      <strong>Renderer</strong> = JavaScript navigateur (peut utiliser <code>&lt;script type="module"&gt;</code>).
+    </div>
 
     <h2>4. Exercice</h2>
     <p>Ajoutez dans <code>index.html</code> un script qui affiche <code>navigator.userAgent</code> — observez que c'est Chromium.</p>
@@ -474,9 +493,9 @@ MESA-LOADER: failed to open dri ... Permission non accordée</code></pre>
       <li>Exposer une API sécurisée au Renderer via <code>contextBridge</code></li>
     </ul>
 
-    <h2>2. preload.js</h2>
-    <pre><code>// preload.js — Pont entre Main et Renderer
-const { contextBridge } = require('electron');
+    <h2>2. preload.js (ESM)</h2>
+    <pre><code>// preload.js — Pont entre Main et Renderer (ESM)
+import { contextBridge } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
@@ -518,18 +537,18 @@ contextBridge.exposeInMainWorld('electronAPI', {
       <li>Recevoir une réponse avec <code>invoke</code> / <code>handle</code></li>
     </ul>
 
-    <h2>2. preload.js</h2>
-    <pre><code>const { contextBridge, ipcRenderer } = require('electron');
+    <h2>2. preload.js (ESM)</h2>
+    <pre><code>import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('api', {
   sauvegarder: (texte) => ipcRenderer.invoke('save-text', texte),
   lire: () => ipcRenderer.invoke('read-text'),
 });</code></pre>
 
-    <h2>3. main.js</h2>
-    <pre><code>const { ipcMain } = require('electron');
-const fs = require('fs');
-const path = require('path');
+    <h2>3. main.js (ESM)</h2>
+    <pre><code>import { app, ipcMain } from 'electron';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const fichier = path.join(app.getPath('userData'), 'notes.txt');
 
@@ -584,15 +603,15 @@ ipcMain.handle('read-text', () => {
 └── js/navigation.js</div>
 
     <h2>3. Navigation simple (méthode débutant)</h2>
-  <pre><code>// js/navigation.js (Renderer)
-function allerVers(page) {
+  <pre><code>// js/navigation.js (Renderer — ESM)
+export function allerVers(page) {
   window.location.href = \`pages/\${page}.html\`;
 }</code></pre>
-    <pre><code>&lt;!-- pages/accueil.html --&gt;
-&lt;nav&gt;
-  &lt;button onclick="allerVers('parametres')"&gt;Paramètres&lt;/button&gt;
-  &lt;button onclick="allerVers('apropos')"&gt;À propos&lt;/button&gt;
-&lt;/nav&gt;</code></pre>
+    <pre><code>&lt;!-- pages/accueil.html — charger le module ESM --&gt;
+&lt;script type="module"&gt;
+  import { allerVers } from '../js/navigation.js';
+  document.getElementById('btn-params').onclick = () =&gt; allerVers('parametres');
+&lt;/script&gt;</code></pre>
 
     <h2>4. Charger une autre page depuis main.js</h2>
     <pre><code>win.loadFile(path.join(__dirname, 'pages', 'accueil.html'));</code></pre>
@@ -614,8 +633,8 @@ function allerVers(page) {
     <div class="alert alert--info">
       📚 <a href="${OFFICIAL}/tutorial/application-menu" target="_blank" rel="noopener">Menu d'application — Electron</a>
     </div>
-    <h2>1. Menu natif</h2>
-    <pre><code>const { Menu } = require('electron');
+    <h2>1. Menu natif (ESM)</h2>
+    <pre><code>import { Menu } from 'electron';
 
 const template = [
   {
@@ -633,8 +652,8 @@ const template = [
 ];
 Menu.setApplicationMenu(Menu.buildFromTemplate(template));</code></pre>
 
-    <h2>2. Boîte de dialogue</h2>
-    <pre><code>const { dialog } = require('electron');
+    <h2>2. Boîte de dialogue (ESM)</h2>
+    <pre><code>import { dialog } from 'electron';
 
 const { response } = await dialog.showMessageBox({
   type: 'question',
@@ -650,8 +669,9 @@ const { response } = await dialog.showMessageBox({
     title: 'Chapitre 9 — Ouvrir & enregistrer des fichiers',
     level: 'Intermédiaire', hours: '5h', prereq: 'Chapitre 8',
     body: `
-    <h2>1. Dialog Ouvrir / Enregistrer</h2>
-    <pre><code>const { dialog } = require('electron');
+    <h2>1. Dialog Ouvrir / Enregistrer (ESM — dans main.js)</h2>
+    <pre><code>import { dialog, ipcMain } from 'electron';
+import fs from 'node:fs';
 
 ipcMain.handle('dialog:open', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog({
@@ -671,8 +691,10 @@ ipcMain.handle('dialog:save', async (_e, contenu) => {
   return true;
 });</code></pre>
 
-    <h2>2. preload.js</h2>
-    <pre><code>contextBridge.exposeInMainWorld('api', {
+    <h2>2. preload.js (ESM)</h2>
+    <pre><code>import { contextBridge, ipcRenderer } from 'electron';
+
+contextBridge.exposeInMainWorld('api', {
   ouvrir: () => ipcRenderer.invoke('dialog:open'),
   enregistrer: (c) => ipcRenderer.invoke('dialog:save', c),
 });</code></pre>
@@ -730,10 +752,10 @@ ipcMain.handle('dialog:save', async (_e, contenu) => {
   }]
 }</code></pre>
 
-    <h2>3. Logs</h2>
+    <h2>3. Logs (ESM)</h2>
     <pre><code>npm install electron-log --save
 // main.js
-const log = require('electron-log');
+import log from 'electron-log';
 log.info('Application démarrée');</code></pre>`,
   },
   {
@@ -759,8 +781,8 @@ test('titre vide', () => expect(formaterTitre('')).toBe('Sans titre'));</code></
     <h2>3. Tests E2E — Playwright</h2>
     <pre><code>npm install @playwright/test --save-dev
 npx playwright install</code></pre>
-    <pre><code>// tests/electron.spec.js
-const { test, expect, _electron: electron } = require('@playwright/test');
+    <pre><code>// tests/electron.spec.js (ESM)
+import { test, expect, _electron as electron } from '@playwright/test';
 
 test('fenêtre principale', async () => {
   const app = await electron.launch({ args: ['.'] });
@@ -796,6 +818,7 @@ npx playwright test</code></pre>
     <pre><code>{
   "name": "mon-app-electron",
   "version": "1.0.0",
+  "type": "module",
   "main": "main.js",
   "author": "wazabiCode",
   "scripts": {
@@ -857,8 +880,9 @@ npm run dist:linux   # Linux AppImage</code></pre>
     <h2>1. Publier sur GitHub Releases</h2>
     <pre><code>npm install electron-updater --save
 
-// main.js
-const { autoUpdater } = require('electron-updater');
+// main.js (ESM)
+import { autoUpdater } from 'electron-updater';
+import { app } from 'electron';
 app.whenReady().then(() => autoUpdater.checkForUpdatesAndNotify());</code></pre>
 
     <h2>2. CI/CD simplifié (GitHub Actions)</h2>
@@ -914,10 +938,11 @@ const PROJECTS = [
       <li><code>npm start</code> — vérifier la fenêtre</li>
       <li><code>npm run dist</code> — installateur (chapitre 13)</li>
     </ol>
-    <h2>package.json final attendu</h2>
+    <h2>package.json final attendu (ESM)</h2>
     <pre><code>{
   "name": "mon-app-electron",
   "version": "1.0.0",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
@@ -926,6 +951,7 @@ const PROJECTS = [
     "electron": "^42.5.0"
   }
 }</code></pre>
+    <p>Tous les <code>.js</code> du Main et Preload utilisent <code>import</code> / <code>export</code>.</p>
     <h2>Livrable</h2>
     <p>Dossier <code>dist/</code> avec l'installateur + capture d'écran.</p>`,
   },

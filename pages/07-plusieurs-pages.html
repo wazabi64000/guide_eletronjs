@@ -34,15 +34,15 @@
 └── js/navigation.js</div>
 
     <h2>3. Navigation simple (méthode débutant)</h2>
-  <pre><code>// js/navigation.js (Renderer)
-function allerVers(page) {
+  <pre><code>// js/navigation.js (Renderer — ESM)
+export function allerVers(page) {
   window.location.href = `pages/${page}.html`;
 }</code></pre>
-    <pre><code>&lt;!-- pages/accueil.html --&gt;
-&lt;nav&gt;
-  &lt;button onclick="allerVers('parametres')"&gt;Paramètres&lt;/button&gt;
-  &lt;button onclick="allerVers('apropos')"&gt;À propos&lt;/button&gt;
-&lt;/nav&gt;</code></pre>
+    <pre><code>&lt;!-- pages/accueil.html — charger le module ESM --&gt;
+&lt;script type="module"&gt;
+  import { allerVers } from '../js/navigation.js';
+  document.getElementById('btn-params').onclick = () =&gt; allerVers('parametres');
+&lt;/script&gt;</code></pre>
 
     <h2>4. Charger une autre page depuis main.js</h2>
     <pre><code>win.loadFile(path.join(__dirname, 'pages', 'accueil.html'));</code></pre>

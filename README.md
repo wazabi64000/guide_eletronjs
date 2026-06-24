@@ -1,6 +1,6 @@
 # guide_eletronjs — wazabiCode
 
-Formation **Electron.js : de zéro à l'exécutable** — basée sur la [documentation officielle](https://www.electronjs.org/fr/docs/latest/tutorial/installation).
+Formation **Electron.js : de zéro à l'exécutable** — **modules ESM** (`import` / `export`).
 
 ## Lancer la plateforme
 

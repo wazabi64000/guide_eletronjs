@@ -18,8 +18,8 @@
     <div class="alert alert--info">
       📚 <a href="https://www.electronjs.org/fr/docs/latest/tutorial/application-menu" target="_blank" rel="noopener">Menu d'application — Electron</a>
     </div>
-    <h2>1. Menu natif</h2>
-    <pre><code>const { Menu } = require('electron');
+    <h2>1. Menu natif (ESM)</h2>
+    <pre><code>import { Menu } from 'electron';
 
 const template = [
   {
@@ -37,8 +37,8 @@ const template = [
 ];
 Menu.setApplicationMenu(Menu.buildFromTemplate(template));</code></pre>
 
-    <h2>2. Boîte de dialogue</h2>
-    <pre><code>const { dialog } = require('electron');
+    <h2>2. Boîte de dialogue (ESM)</h2>
+    <pre><code>import { dialog } from 'electron';
 
 const { response } = await dialog.showMessageBox({
   type: 'question',

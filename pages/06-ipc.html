@@ -24,18 +24,18 @@
       <li>Recevoir une réponse avec <code>invoke</code> / <code>handle</code></li>
     </ul>
 
-    <h2>2. preload.js</h2>
-    <pre><code>const { contextBridge, ipcRenderer } = require('electron');
+    <h2>2. preload.js (ESM)</h2>
+    <pre><code>import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('api', {
   sauvegarder: (texte) => ipcRenderer.invoke('save-text', texte),
   lire: () => ipcRenderer.invoke('read-text'),
 });</code></pre>
 
-    <h2>3. main.js</h2>
-    <pre><code>const { ipcMain } = require('electron');
-const fs = require('fs');
-const path = require('path');
+    <h2>3. main.js (ESM)</h2>
+    <pre><code>import { app, ipcMain } from 'electron';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const fichier = path.join(app.getPath('userData'), 'notes.txt');
 

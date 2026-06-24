@@ -79,6 +79,7 @@ npm install electron --save-dev</code></pre>
     <table>
       <tr><th>Champ</th><th>❌ Avant</th><th>✅ Après</th></tr>
       <tr><td><code>main</code></td><td><code>"index.js"</code></td><td><code>"main.js"</code></td></tr>
+      <tr><td><code>type</code></td><td>absent</td><td><code>"module"</code> (ESM — obligatoire)</td></tr>
       <tr><td><code>scripts</code></td><td>seulement <code>test</code></td><td>ajouter <code>"start": "electron ."</code></td></tr>
       <tr><td><code>description</code></td><td><code>""</code></td><td><code>"Ma première app Electron"</code> (optionnel)</td></tr>
     </table>
@@ -86,6 +87,7 @@ npm install electron --save-dev</code></pre>
   "name": "mon-app-electron",
   "version": "1.0.0",
   "description": "Ma première app Electron",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -98,6 +100,7 @@ npm install electron --save-dev</code></pre>
     "electron": "^42.5.0"
   }
 }</code></pre>
+    <p><code>"type": "module"</code> active les <strong>modules ESM</strong> : vous utiliserez <code>import</code> au lieu de <code>require()</code> dans <code>main.js</code> et <code>preload.js</code>.</p>
     <div class="alert alert--warning">
       <strong>Ne créez pas <code>index.js</code> !</strong> Si ce fichier existe vide, supprimez-le :
       <code>rm index.js</code>. Le point d'entrée Electron est <code>main.js</code> (chapitre 3).
@@ -141,6 +144,7 @@ npm install electron --save-dev</code></pre>
       <tr><td><code>Cannot find module 'index.js'</code></td><td><code>"main": "index.js"</code> non modifié</td><td>Mettre <code>"main": "main.js"</code></td></tr>
       <tr><td><code>Cannot find module 'main.js'</code></td><td>Chapitre 3 pas fait</td><td>Créer <code>main.js</code> ou attendre ch. 3</td></tr>
       <tr><td><code>index.js</code> vide existe</td><td>Confusion index.js / main.js</td><td><code>rm index.js</code> + <code>"main": "main.js"</code></td></tr>
+      <tr><td><code>require is not defined</code></td><td>ESM activé sans <code>import</code></td><td><code>"type": "module"</code> + utiliser <code>import</code></td></tr>
       <tr><td>ELIFECYCLE, ETIMEDOUT</td><td>Réseau</td><td><code>npm install --verbose electron</code></td></tr>
     </table>
 
