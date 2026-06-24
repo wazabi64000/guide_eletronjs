@@ -27,11 +27,22 @@
     <h2>2. Electron en une phrase</h2>
     <p><strong>Electron</strong> permet de créer une application installable (Windows, macOS, Linux) avec du <strong>HTML, CSS et JavaScript</strong>, comme un site web, mais dans sa propre fenêtre.</p>
     <p>Exemples : Visual Studio Code, Discord, Slack, Obsidian.</p>
-    <h2>3. Les 3 fichiers minimum</h2>
-    <div class="ascii-diagram">mon-app/
-├── package.json    ← configuration npm
-├── main.js         ← démarre l'app (Node.js)
-└── index.html      ← votre première page (interface)</div>
+    <h2>3. Les fichiers du projet (attention aux noms !)</h2>
+    <table>
+      <tr><th>Fichier</th><th>Rôle</th><th>Créé quand ?</th></tr>
+      <tr><td><code>package.json</code></td><td>Configuration npm + point d'entrée Electron</td><td>Chapitre 1</td></tr>
+      <tr><td><code>main.js</code></td><td>Démarre Electron, ouvre la fenêtre</td><td>Chapitre 3</td></tr>
+      <tr><td><code>index.html</code></td><td>Interface visible (HTML/CSS/JS)</td><td>Chapitre 2</td></tr>
+    </table>
+    <div class="alert alert--warning">
+      <strong>Piège fréquent :</strong> <code>npm init -y</code> met <code>"main": "index.js"</code>.
+      Ce n'est <em>pas</em> <code>index.html</code> ! Ne créez pas un <code>index.js</code> vide — utilisez <code>main.js</code> pour Electron.
+    </div>
+    <div class="ascii-diagram">mon-app-electron/          (état final chapitre 3)
+├── package.json             "main": "main.js"
+├── main.js                  ← Electron démarre ici
+├── index.html               ← l'utilisateur voit ceci
+└── node_modules/electron/</div>
     <h2>4. Ce que vous allez apprendre</h2>
     <ol>
       <li>Installer Electron avec <code>npm install electron --save-dev</code></li>

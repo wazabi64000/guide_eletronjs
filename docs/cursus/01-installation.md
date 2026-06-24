@@ -1,8 +1,8 @@
 # Chapitre 1 — Installation officielle d'Electron
 
-**Source :** [Instructions d'installation avancée — Electron](https://www.electronjs.org/fr/docs/latest/tutorial/installation)
+**Source :** [Installation avancée — Electron](https://www.electronjs.org/fr/docs/latest/tutorial/installation)
 
-## Installation
+## Commandes
 
 ```bash
 mkdir mon-app-electron && cd mon-app-electron
@@ -10,40 +10,55 @@ npm init -y
 npm install electron --save-dev
 ```
 
-## ⚠️ Corriger package.json immédiatement
+## Après `npm init -y` (réel)
 
-`npm init -y` met par défaut `"main": "index.js"`. Electron cherche ce fichier et plante.
+```json
+{
+  "name": "mon-app-electron",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
+```
+
+## Après `npm install electron --save-dev`
+
+Ajout de `devDependencies.electron`. Le champ `"main": "index.js"` est **toujours incorrect** pour Electron.
+
+## Correction obligatoire
+
+| Champ | Avant | Après |
+|-------|-------|-------|
+| `main` | `index.js` | `main.js` |
+| `scripts` | seulement `test` | + `"start": "electron ."` |
 
 ```json
 {
   "main": "main.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
   },
   "devDependencies": {
-    "electron": "^33.0.0"
+    "electron": "^42.5.0"
   }
 }
 ```
 
-## Ordre du cours
+**Ne pas créer `index.js`.** Supprimer si présent : `rm index.js`
 
-1. Chapitre 1 — install + corriger `package.json`
-2. Chapitre 2 — créer `index.html`
-3. Chapitre 3 — créer `main.js` → `npm start`
+## Fil conducteur
 
-**Ne pas lancer `npx electron .` avant le chapitre 3.**
+| Chapitre | Fichier créé | `npm start` |
+|----------|--------------|-------------|
+| 1 | package.json corrigé | ❌ |
+| 2 | index.html | ❌ (main.js manquant) |
+| 3 | main.js | ✅ |
 
-## Erreur : Cannot find module index.js
+## Piège : index.js vs index.html vs main.js
 
-| Cause | Solution |
-|-------|----------|
-| `"main": "index.js"` dans package.json | Changer en `"main": "main.js"` |
-| `main.js` n'existe pas | Créer `main.js` (chapitre 3) |
-
-## Dépannage réseau
-
-```bash
-npm install --verbose electron
-ELECTRON_MIRROR="https://npmmirror.com/mirrors/electron/" npm install electron --save-dev
-```
+- `index.js` → entrée Node par défaut de npm (ne pas utiliser)
+- `index.html` → interface utilisateur (chapitre 2)
+- `main.js` → entrée Electron (chapitre 3)

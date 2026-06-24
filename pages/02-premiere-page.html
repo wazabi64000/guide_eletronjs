@@ -66,15 +66,18 @@
     <h2>3. Tester dans le navigateur (optionnel)</h2>
     <p>Ouvrez <code>index.html</code> dans Chrome pour vérifier le rendu. Ce n'est <em>pas</em> encore Electron, mais utile pour déboguer le HTML/CSS.</p>
 
-    <h2>4. Structure actuelle</h2>
+    <h2>4. Structure après le chapitre 2</h2>
     <div class="ascii-diagram">mon-app-electron/
-├── package.json      ← "main": "main.js" (déjà corrigé ch.1)
-├── node_modules/
-└── index.html        ← vous venez de créer ceci
-(main.js pas encore — normal !)</div>
+├── package.json       "main": "main.js"  (corrigé ch.1)
+├── index.html         ✅ créé maintenant
+├── node_modules/electron/
+└── main.js            ❌ chapitre 3
+
+⛔ npm start → "Cannot find module main.js" → NORMAL</div>
 
     <div class="alert alert--info">
-      Si vous lancez <code>npm start</code> maintenant, vous aurez encore une erreur : <code>main.js</code> n'existe pas. C'est normal — passez au chapitre 3.
+      <strong>Rappel :</strong> <code>index.html</code> ≠ <code>index.js</code>.
+      Le HTML est l'interface ; <code>main.js</code> (pas encore créé) lancera Electron au chapitre 3.
     </div>
 
     <h2>5. Exercice</h2>

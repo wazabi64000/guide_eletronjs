@@ -31,11 +31,22 @@ const MODULES = [
     <h2>2. Electron en une phrase</h2>
     <p><strong>Electron</strong> permet de créer une application installable (Windows, macOS, Linux) avec du <strong>HTML, CSS et JavaScript</strong>, comme un site web, mais dans sa propre fenêtre.</p>
     <p>Exemples : Visual Studio Code, Discord, Slack, Obsidian.</p>
-    <h2>3. Les 3 fichiers minimum</h2>
-    <div class="ascii-diagram">mon-app/
-├── package.json    ← configuration npm
-├── main.js         ← démarre l'app (Node.js)
-└── index.html      ← votre première page (interface)</div>
+    <h2>3. Les fichiers du projet (attention aux noms !)</h2>
+    <table>
+      <tr><th>Fichier</th><th>Rôle</th><th>Créé quand ?</th></tr>
+      <tr><td><code>package.json</code></td><td>Configuration npm + point d'entrée Electron</td><td>Chapitre 1</td></tr>
+      <tr><td><code>main.js</code></td><td>Démarre Electron, ouvre la fenêtre</td><td>Chapitre 3</td></tr>
+      <tr><td><code>index.html</code></td><td>Interface visible (HTML/CSS/JS)</td><td>Chapitre 2</td></tr>
+    </table>
+    <div class="alert alert--warning">
+      <strong>Piège fréquent :</strong> <code>npm init -y</code> met <code>"main": "index.js"</code>.
+      Ce n'est <em>pas</em> <code>index.html</code> ! Ne créez pas un <code>index.js</code> vide — utilisez <code>main.js</code> pour Electron.
+    </div>
+    <div class="ascii-diagram">mon-app-electron/          (état final chapitre 3)
+├── package.json             "main": "main.js"
+├── main.js                  ← Electron démarre ici
+├── index.html               ← l'utilisateur voit ceci
+└── node_modules/electron/</div>
     <h2>4. Ce que vous allez apprendre</h2>
     <ol>
       <li>Installer Electron avec <code>npm install electron --save-dev</code></li>
@@ -81,47 +92,95 @@ const MODULES = [
     <pre><code>node --version   # ex: v22.x.x
 npm --version    # ex: 10.x.x</code></pre>
 
-    <h2>3. Créer le projet (méthode officielle)</h2>
-    <p>La documentation Electron recommande d'installer Electron en <strong>dépendance de développement</strong> :</p>
+    <h2>3. Créer le projet — commandes</h2>
     <pre><code>mkdir mon-app-electron
 cd mon-app-electron
 npm init -y
 npm install electron --save-dev</code></pre>
-    <p>Lors du <code>postinstall</code>, npm télécharge le binaire Electron via <code>@electron/get</code>.</p>
 
-    <h2>4. ⚠️ Corriger package.json (étape obligatoire)</h2>
-    <p><code>npm init -y</code> crée par défaut <code>"main": "index.js"</code>. Or Electron cherche ce fichier pour démarrer — et il n'existe pas encore !</p>
-    <div class="alert alert--warning">
-      <strong>Erreur fréquente :</strong><br>
-      <code>Cannot find module '.../index.js'. Please verify that the package.json has a valid "main" entry</code><br><br>
-      <strong>Solution :</strong> modifiez <code>package.json</code> tout de suite après <code>npm init -y</code> :
-    </div>
-    <pre><code>// ❌ Après npm init -y (par défaut)
-"main": "index.js"
+    <h2>4. Étape A — Ce que <code>npm init -y</code> produit réellement</h2>
+    <p>Après <code>npm init -y</code>, votre <code>package.json</code> ressemble exactement à ceci :</p>
+    <pre><code>{
+  "name": "mon-app-electron",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\"Error: no test specified\\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}</code></pre>
+    <p>⚠️ <code>"main": "index.js"</code> est le point d'entrée <strong>Node.js par défaut</strong>, pas Electron. Ce fichier n'existe pas encore.</p>
 
-// ✅ Ce qu'il faut mettre (même avant de créer main.js)
-"main": "main.js"</code></pre>
-    <p>Ouvrez <code>package.json</code> et remplacez son contenu par :</p>
+    <h2>5. Étape B — Après <code>npm install electron --save-dev</code></h2>
+    <pre><code>{
+  "name": "mon-app-electron",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\"Error: no test specified\\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "electron": "^42.5.0"
+  }
+}</code></pre>
+    <p>Electron est installé, mais <strong>l'app ne peut toujours pas démarrer</strong> : <code>index.js</code> n'existe pas.</p>
+
+    <h2>6. Étape C — Corriger <code>package.json</code> (obligatoire)</h2>
+    <p>Modifiez <strong>uniquement</strong> ces lignes (gardez le reste) :</p>
+    <table>
+      <tr><th>Champ</th><th>❌ Avant</th><th>✅ Après</th></tr>
+      <tr><td><code>main</code></td><td><code>"index.js"</code></td><td><code>"main.js"</code></td></tr>
+      <tr><td><code>scripts</code></td><td>seulement <code>test</code></td><td>ajouter <code>"start": "electron ."</code></td></tr>
+      <tr><td><code>description</code></td><td><code>""</code></td><td><code>"Ma première app Electron"</code> (optionnel)</td></tr>
+    </table>
     <pre><code>{
   "name": "mon-app-electron",
   "version": "1.0.0",
   "description": "Ma première app Electron",
   "main": "main.js",
   "scripts": {
+    "test": "echo \\"Error: no test specified\\" && exit 1",
     "start": "electron ."
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "electron": "^33.0.0"
+    "electron": "^42.5.0"
   }
 }</code></pre>
-    <p><strong>Important :</strong> ne lancez pas encore <code>npm start</code> ni <code>npx electron .</code> — le fichier <code>main.js</code> sera créé au <strong>chapitre 3</strong>, après <code>index.html</code> (chapitre 2).</p>
+    <div class="alert alert--warning">
+      <strong>Ne créez pas <code>index.js</code> !</strong> Si ce fichier existe vide, supprimez-le :
+      <code>rm index.js</code>. Le point d'entrée Electron est <code>main.js</code> (chapitre 3).
+    </div>
 
-    <h2>5. Ordre des étapes (ne pas sauter)</h2>
-    <div class="ascii-diagram">Chapitre 1  npm init + npm install electron + corriger package.json
-Chapitre 2  créer index.html (interface)
-Chapitre 3  créer main.js → npm start  ✅ première fenêtre</div>
+    <h2>7. État du projet après le chapitre 1</h2>
+    <div class="ascii-diagram">mon-app-electron/
+├── package.json       ✅ corrigé ("main": "main.js")
+├── node_modules/
+│   └── electron/      ✅ installé
+├── main.js            ❌ pas encore (chapitre 3)
+└── index.html         ❌ pas encore (chapitre 2)
 
-    <h2>6. Personnalisation (doc officielle)</h2>
+⛔ npm start → erreur "Cannot find module main.js" → NORMAL</div>
+    <p><strong>Ne lancez pas</strong> <code>npm start</code> ni <code>npx electron .</code> avant le chapitre 3.</p>
+
+    <h2>8. Fil conducteur du cours</h2>
+    <table>
+      <tr><th>Chapitre</th><th>Action</th><th><code>npm start</code> ?</th></tr>
+      <tr><td>1</td><td>npm init + install electron + corriger package.json</td><td>❌ Trop tôt</td></tr>
+      <tr><td>2</td><td>Créer <code>index.html</code></td><td>❌ main.js manquant</td></tr>
+      <tr><td>3</td><td>Créer <code>main.js</code></td><td>✅ Fonctionne !</td></tr>
+    </table>
+
+    <h2>9. Personnalisation (doc officielle)</h2>
     <table>
       <tr><th>Option</th><th>Commande</th></tr>
       <tr><td>Architecture x64 sur ARM</td><td><code>npm install --arch=x64 electron</code></td></tr>
@@ -130,31 +189,29 @@ Chapitre 3  créer main.js → npm start  ✅ première fenêtre</div>
       <tr><td>Sans télécharger le binaire (CI)</td><td><code>ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm install</code></td></tr>
     </table>
 
-    <h2>7. Miroir (réseau lent ou Chine)</h2>
+    <h3>Miroir (réseau lent ou Chine)</h3>
     <pre><code>export ELECTRON_MIRROR="https://npmmirror.com/mirrors/electron/"
 npm install electron --save-dev</code></pre>
 
-    <h2>8. Résolution des problèmes</h2>
+    <h2>10. Résolution des problèmes</h2>
     <table>
       <tr><th>Erreur</th><th>Cause</th><th>Solution</th></tr>
-      <tr><td><code>Cannot find module 'index.js'</code></td><td><code>npm init -y</code> a mis <code>main: index.js</code></td><td>Changer en <code>"main": "main.js"</code> et créer <code>main.js</code> (ch. 3)</td></tr>
-      <tr><td><code>Unable to find Electron app</code></td><td>Fichier <code>main</code> absent</td><td>Créer <code>main.js</code> avant <code>npm start</code></td></tr>
-      <tr><td>ELIFECYCLE, ETIMEDOUT, ECONNRESET</td><td>Réseau</td><td>Réessayer, miroir, <code>npm install --verbose electron</code></td></tr>
-      <tr><td>EACCESS</td><td>Droits npm</td><td>Corriger permissions npm</td></tr>
+      <tr><td><code>Cannot find module 'index.js'</code></td><td><code>"main": "index.js"</code> non modifié</td><td>Mettre <code>"main": "main.js"</code></td></tr>
+      <tr><td><code>Cannot find module 'main.js'</code></td><td>Chapitre 3 pas fait</td><td>Créer <code>main.js</code> ou attendre ch. 3</td></tr>
+      <tr><td><code>index.js</code> vide existe</td><td>Confusion index.js / main.js</td><td><code>rm index.js</code> + <code>"main": "main.js"</code></td></tr>
+      <tr><td>ELIFECYCLE, ETIMEDOUT</td><td>Réseau</td><td><code>npm install --verbose electron</code></td></tr>
     </table>
-    <pre><code># Voir la progression du téléchargement
-npm install --verbose electron</code></pre>
 
-    <h2>9. Exercice</h2>
+    <h2>11. Exercice</h2>
     <ol>
-      <li>Créez le dossier <code>mon-app-electron</code></li>
-      <li><code>npm init -y</code> puis <code>npm install electron --save-dev</code></li>
-      <li>Modifiez <code>package.json</code> : <code>"main": "main.js"</code> et script <code>"start": "electron ."</code></li>
-      <li>Vérifiez <code>node_modules/electron</code> — <em>ne lancez pas encore l'app</em></li>
+      <li><code>npm init -y</code> — comparez votre JSON avec la section 4</li>
+      <li><code>npm install electron --save-dev</code> — comparez avec la section 5</li>
+      <li>Corrigez <code>package.json</code> — résultat identique à la section 6</li>
+      <li>Vérifiez : pas de <code>index.js</code>, pas de <code>main.js</code> encore</li>
     </ol>
 
-    <h2>10. Challenge</h2>
-    <p>Installez Electron avec <code>--verbose</code> et notez où le binaire est mis en cache sur votre OS (voir doc : <code>~/.cache/electron/</code> sur Linux).</p>`,
+    <h2>12. Challenge</h2>
+    <p>Installez avec <code>--verbose</code> et trouvez le cache Electron (<code>~/.cache/electron/</code> sur Linux).</p>`,
   },
   {
     file: '02-premiere-page', id: '02-premiere-page',
@@ -212,15 +269,18 @@ npm install --verbose electron</code></pre>
     <h2>3. Tester dans le navigateur (optionnel)</h2>
     <p>Ouvrez <code>index.html</code> dans Chrome pour vérifier le rendu. Ce n'est <em>pas</em> encore Electron, mais utile pour déboguer le HTML/CSS.</p>
 
-    <h2>4. Structure actuelle</h2>
+    <h2>4. Structure après le chapitre 2</h2>
     <div class="ascii-diagram">mon-app-electron/
-├── package.json      ← "main": "main.js" (déjà corrigé ch.1)
-├── node_modules/
-└── index.html        ← vous venez de créer ceci
-(main.js pas encore — normal !)</div>
+├── package.json       "main": "main.js"  (corrigé ch.1)
+├── index.html         ✅ créé maintenant
+├── node_modules/electron/
+└── main.js            ❌ chapitre 3
+
+⛔ npm start → "Cannot find module main.js" → NORMAL</div>
 
     <div class="alert alert--info">
-      Si vous lancez <code>npm start</code> maintenant, vous aurez encore une erreur : <code>main.js</code> n'existe pas. C'est normal — passez au chapitre 3.
+      <strong>Rappel :</strong> <code>index.html</code> ≠ <code>index.js</code>.
+      Le HTML est l'interface ; <code>main.js</code> (pas encore créé) lancera Electron au chapitre 3.
     </div>
 
     <h2>5. Exercice</h2>
@@ -279,35 +339,78 @@ app.on('activate', () => {
       <tr><td><code>app.whenReady()</code></td><td>Attend qu'Electron soit initialisé</td></tr>
     </table>
 
-    <h2>4. Vérifier package.json</h2>
-    <p>Assurez-vous que ces lignes sont présentes (normalement fait au chapitre 1) :</p>
+    <h2>4. package.json final (vérifiez avant de lancer)</h2>
     <pre><code>{
+  "name": "mon-app-electron",
+  "version": "1.0.0",
+  "description": "Ma première app Electron",
   "main": "main.js",
   "scripts": {
+    "test": "echo \\"Error: no test specified\\" && exit 1",
     "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^42.5.0"
   }
 }</code></pre>
+    <p>Sur Linux (Pop!_OS, Ubuntu), si messages GPU au démarrage, utilisez plutôt :</p>
+    <pre><code>"start": "electron . --disable-gpu-sandbox"</code></pre>
 
-    <h2>5. Lancer l'application !</h2>
+    <h2>5. Structure complète — prête à lancer</h2>
+    <div class="ascii-diagram">mon-app-electron/
+├── package.json       "main": "main.js" ✅
+├── main.js            ✅ créé (section 2)
+├── index.html         ✅ créé (chapitre 2)
+└── node_modules/electron/
+
+→ npm start  ✅</div>
+
+    <h2>6. Lancer l'application</h2>
     <pre><code>npm start
-# équivalent :
-npx electron .</code></pre>
-    <p>🎉 Votre première fenêtre Desktop s'ouvre avec <code>index.html</code> !</p>
+# équivalent : npx electron .</code></pre>
+    <p>🎉 La fenêtre s'ouvre avec <code>index.html</code> !</p>
 
-    <h2>6. DevTools</h2>
+    <h2>7. DevTools</h2>
     <p>Dans la fenêtre : <code>Ctrl+Shift+I</code> (Windows/Linux) ou <code>Cmd+Option+I</code> (macOS) pour ouvrir les outils de développement Chrome.</p>
 
-    <h2>7. Exercice</h2>
+    <h2>8. Exercice</h2>
     <p>Changez la taille de la fenêtre à 1200×800 et modifiez le titre.</p>
 
-    <h2>8. Erreurs fréquentes</h2>
+    <h2>9. Checklist de cohérence</h2>
+    <table>
+      <tr><th>Vérification</th><th>Attendu</th></tr>
+      <tr><td><code>package.json</code> → <code>main</code></td><td><code>"main.js"</code> (pas index.js)</td></tr>
+      <tr><td>Fichier <code>index.js</code></td><td>Absent (supprimez-le s'il existe)</td></tr>
+      <tr><td>Fichier <code>main.js</code></td><td>Présent, non vide</td></tr>
+      <tr><td>Fichier <code>index.html</code></td><td>Présent</td></tr>
+      <tr><td><code>npm start</code></td><td>Fenêtre Electron visible</td></tr>
+    </table>
+
+    <h2>10. Erreurs fréquentes</h2>
     <table>
       <tr><th>Erreur</th><th>Solution</th></tr>
       <tr><td><code>Cannot find module 'index.js'</code></td><td>Dans <code>package.json</code>, remplacez <code>"main": "index.js"</code> par <code>"main": "main.js"</code></td></tr>
       <tr><td><code>Cannot find module 'main.js'</code></td><td>Créez le fichier <code>main.js</code> (code section 2 ci-dessus)</td></tr>
       <tr><td><code>Cannot find module 'electron'</code></td><td><code>npm install electron --save-dev</code></td></tr>
       <tr><td>Page blanche</td><td>Vérifiez <code>win.loadFile(..., 'index.html')</code></td></tr>
-    </table>`,
+      <tr><td><code>VAAPI</code> / <code>MESA-LOADER</code> (Linux)</td><td>Avertissements GPU — voir section 9 ci-dessous</td></tr>
+    </table>
+
+    <h2>11. Linux (Pop!_OS, Ubuntu) — messages GPU</h2>
+    <p>Sous Linux, vous pouvez voir dans le terminal :</p>
+    <pre><code>VAAPI version is too old...
+MESA-LOADER: failed to open dri ... Permission non accordée</code></pre>
+    <p>Ce sont des <strong>avertissements du pilote graphique</strong>, pas forcément un crash. Si la fenêtre s'ouvre, ignorez-les.</p>
+    <p>Si la fenêtre ne s'ouvre pas ou l'app plante, modifiez le script <code>start</code> dans <code>package.json</code> :</p>
+    <pre><code>"scripts": {
+  "start": "electron . --disable-gpu-sandbox",
+  "start:gpu": "electron ."
+}</code></pre>
+    <p>Puis lancez <code>npm start</code>. L'option <code>--disable-gpu-sandbox</code> contourne les problèmes de permissions sur <code>dri_gbm.so</code>.</p>
+    <div class="alert alert--info">
+      <strong>Vérifier aussi :</strong> ne laissez pas <code>"main": "index.js"</code> avec un fichier vide.
+      Electron doit pointer vers <code>main.js</code> qui charge <code>index.html</code>.
+    </div>`,
   },
   {
     file: '04-processus', id: '04-processus',
@@ -800,14 +903,29 @@ const PROJECTS = [
     body: `
     <h2>Objectif</h2>
     <p>Application minimale : une page, un bouton, compilée en installateur.</p>
-    <h2>Étapes</h2>
+    <h2>Étapes (dans l'ordre)</h2>
     <ol>
-      <li><code>npm init -y</code> → corriger <code>"main": "main.js"</code> dans package.json</li>
+      <li><code>npm init -y</code> → vous obtenez <code>"main": "index.js"</code></li>
       <li><code>npm install electron --save-dev</code></li>
-      <li>Créer <code>index.html</code> puis <code>main.js</code> (dans cet ordre)</li>
+      <li>Corriger <code>package.json</code> : <code>"main": "main.js"</code> + <code>"start": "electron ."</code></li>
+      <li>Supprimer <code>index.js</code> s'il existe (<code>rm index.js</code>)</li>
+      <li>Créer <code>index.html</code> (chapitre 2)</li>
+      <li>Créer <code>main.js</code> (chapitre 3)</li>
       <li><code>npm start</code> — vérifier la fenêtre</li>
-      <li><code>npm run dist</code> — obtenir l'installateur</li>
+      <li><code>npm run dist</code> — installateur (chapitre 13)</li>
     </ol>
+    <h2>package.json final attendu</h2>
+    <pre><code>{
+  "name": "mon-app-electron",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^42.5.0"
+  }
+}</code></pre>
     <h2>Livrable</h2>
     <p>Dossier <code>dist/</code> avec l'installateur + capture d'écran.</p>`,
   },

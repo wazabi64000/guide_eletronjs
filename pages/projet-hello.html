@@ -17,14 +17,29 @@
     
     <h2>Objectif</h2>
     <p>Application minimale : une page, un bouton, compilée en installateur.</p>
-    <h2>Étapes</h2>
+    <h2>Étapes (dans l'ordre)</h2>
     <ol>
-      <li><code>npm init -y</code> → corriger <code>"main": "main.js"</code> dans package.json</li>
+      <li><code>npm init -y</code> → vous obtenez <code>"main": "index.js"</code></li>
       <li><code>npm install electron --save-dev</code></li>
-      <li>Créer <code>index.html</code> puis <code>main.js</code> (dans cet ordre)</li>
+      <li>Corriger <code>package.json</code> : <code>"main": "main.js"</code> + <code>"start": "electron ."</code></li>
+      <li>Supprimer <code>index.js</code> s'il existe (<code>rm index.js</code>)</li>
+      <li>Créer <code>index.html</code> (chapitre 2)</li>
+      <li>Créer <code>main.js</code> (chapitre 3)</li>
       <li><code>npm start</code> — vérifier la fenêtre</li>
-      <li><code>npm run dist</code> — obtenir l'installateur</li>
+      <li><code>npm run dist</code> — installateur (chapitre 13)</li>
     </ol>
+    <h2>package.json final attendu</h2>
+    <pre><code>{
+  "name": "mon-app-electron",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^42.5.0"
+  }
+}</code></pre>
     <h2>Livrable</h2>
     <p>Dossier <code>dist/</code> avec l'installateur + capture d'écran.</p>
   </div>

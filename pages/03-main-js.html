@@ -60,35 +60,78 @@ app.on('activate', () => {
       <tr><td><code>app.whenReady()</code></td><td>Attend qu'Electron soit initialisé</td></tr>
     </table>
 
-    <h2>4. Vérifier package.json</h2>
-    <p>Assurez-vous que ces lignes sont présentes (normalement fait au chapitre 1) :</p>
+    <h2>4. package.json final (vérifiez avant de lancer)</h2>
     <pre><code>{
+  "name": "mon-app-electron",
+  "version": "1.0.0",
+  "description": "Ma première app Electron",
   "main": "main.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^42.5.0"
   }
 }</code></pre>
+    <p>Sur Linux (Pop!_OS, Ubuntu), si messages GPU au démarrage, utilisez plutôt :</p>
+    <pre><code>"start": "electron . --disable-gpu-sandbox"</code></pre>
 
-    <h2>5. Lancer l'application !</h2>
+    <h2>5. Structure complète — prête à lancer</h2>
+    <div class="ascii-diagram">mon-app-electron/
+├── package.json       "main": "main.js" ✅
+├── main.js            ✅ créé (section 2)
+├── index.html         ✅ créé (chapitre 2)
+└── node_modules/electron/
+
+→ npm start  ✅</div>
+
+    <h2>6. Lancer l'application</h2>
     <pre><code>npm start
-# équivalent :
-npx electron .</code></pre>
-    <p>🎉 Votre première fenêtre Desktop s'ouvre avec <code>index.html</code> !</p>
+# équivalent : npx electron .</code></pre>
+    <p>🎉 La fenêtre s'ouvre avec <code>index.html</code> !</p>
 
-    <h2>6. DevTools</h2>
+    <h2>7. DevTools</h2>
     <p>Dans la fenêtre : <code>Ctrl+Shift+I</code> (Windows/Linux) ou <code>Cmd+Option+I</code> (macOS) pour ouvrir les outils de développement Chrome.</p>
 
-    <h2>7. Exercice</h2>
+    <h2>8. Exercice</h2>
     <p>Changez la taille de la fenêtre à 1200×800 et modifiez le titre.</p>
 
-    <h2>8. Erreurs fréquentes</h2>
+    <h2>9. Checklist de cohérence</h2>
+    <table>
+      <tr><th>Vérification</th><th>Attendu</th></tr>
+      <tr><td><code>package.json</code> → <code>main</code></td><td><code>"main.js"</code> (pas index.js)</td></tr>
+      <tr><td>Fichier <code>index.js</code></td><td>Absent (supprimez-le s'il existe)</td></tr>
+      <tr><td>Fichier <code>main.js</code></td><td>Présent, non vide</td></tr>
+      <tr><td>Fichier <code>index.html</code></td><td>Présent</td></tr>
+      <tr><td><code>npm start</code></td><td>Fenêtre Electron visible</td></tr>
+    </table>
+
+    <h2>10. Erreurs fréquentes</h2>
     <table>
       <tr><th>Erreur</th><th>Solution</th></tr>
       <tr><td><code>Cannot find module 'index.js'</code></td><td>Dans <code>package.json</code>, remplacez <code>"main": "index.js"</code> par <code>"main": "main.js"</code></td></tr>
       <tr><td><code>Cannot find module 'main.js'</code></td><td>Créez le fichier <code>main.js</code> (code section 2 ci-dessus)</td></tr>
       <tr><td><code>Cannot find module 'electron'</code></td><td><code>npm install electron --save-dev</code></td></tr>
       <tr><td>Page blanche</td><td>Vérifiez <code>win.loadFile(..., 'index.html')</code></td></tr>
+      <tr><td><code>VAAPI</code> / <code>MESA-LOADER</code> (Linux)</td><td>Avertissements GPU — voir section 9 ci-dessous</td></tr>
     </table>
+
+    <h2>11. Linux (Pop!_OS, Ubuntu) — messages GPU</h2>
+    <p>Sous Linux, vous pouvez voir dans le terminal :</p>
+    <pre><code>VAAPI version is too old...
+MESA-LOADER: failed to open dri ... Permission non accordée</code></pre>
+    <p>Ce sont des <strong>avertissements du pilote graphique</strong>, pas forcément un crash. Si la fenêtre s'ouvre, ignorez-les.</p>
+    <p>Si la fenêtre ne s'ouvre pas ou l'app plante, modifiez le script <code>start</code> dans <code>package.json</code> :</p>
+    <pre><code>"scripts": {
+  "start": "electron . --disable-gpu-sandbox",
+  "start:gpu": "electron ."
+}</code></pre>
+    <p>Puis lancez <code>npm start</code>. L'option <code>--disable-gpu-sandbox</code> contourne les problèmes de permissions sur <code>dri_gbm.so</code>.</p>
+    <div class="alert alert--info">
+      <strong>Vérifier aussi :</strong> ne laissez pas <code>"main": "index.js"</code> avec un fichier vide.
+      Electron doit pointer vers <code>main.js</code> qui charge <code>index.html</code>.
+    </div>
   </div>
   <script src="../assets/js/navigation.js"></script>
   <script src="../assets/js/layout.js"></script>
